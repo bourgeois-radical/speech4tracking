@@ -3,13 +3,31 @@ from pathlib import WindowsPath
 from typing import Sequence, Tuple
 
 class PatternRecognizer:
-    """
-
-    """
+    """This class helps to find patterns of our interest in texts of recognized audio files."""
 
     @staticmethod
     def blood_pressure_heart_rate(recognized_audio_data_with_paths: Sequence[Tuple[str, WindowsPath]]) -> \
-            Sequence[Sequence[str]]:
+            Sequence[Sequence[WindowsPath], Sequence[int], Sequence[int], Sequence[int]]:
+        """Recognizes systolic and diastolic blood pressure as well as heart rate
+        in texts of recognized audio files.
+
+         Parameters
+         ----------
+         recognized_audio_data_with_paths : Sequence[Tuple[str, WindowsPath]]
+            A list of tuple(-s), containing the text of the recognized .wav audio file
+            and the path to this file.
+
+         Returns
+         -------
+         all_paths : Sequence[WindowsPath]
+            Paths of audio files in the form of WindowsPath objects.
+         all_sys : Sequence[int]
+            Recognized systolic blood pressure from all the records.
+         all_dia : Sequence[int]
+            Recognized diastolic blood pressure from all the records.
+         all_heart : Sequence[int]
+            Recognized heart rates from all the records.
+         """
 
         all_sys = []
         all_dia = []

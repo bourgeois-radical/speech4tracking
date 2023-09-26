@@ -4,22 +4,29 @@ from speech_recognition import Recognizer, AudioFile, AudioData
 
 
 class VoiceRecordsRecognizer:
-    """This class is an adapter for speech_recognition package"""
+    """This class is an adapter for speech_recognition package."""
+
     def __init__(self):
         pass
 
     def speech2text(self, src_dir: str, voice_records_names: Optional[Sequence[str]] = None) -> \
             Sequence[Tuple[str, WindowsPath]]:
-        """
+        """Transforms .wav audio file(-s) into plain text.
 
         Parameters
         ----------
-        src_dir
-        voice_records_names
+        src_dir : str
+            Source directory of .wav audio file(-s)
+
+        voice_records_names : Optional[Sequence[str]]
+            Optional. if this parameter is not specified,
+            then all .wav files inside the provided src_dir will be uploaded and recognized.
 
         Returns
         -------
-
+        recognized_audio_data_with_paths : Sequence[Tuple[str, WindowsPath]]
+            Returns a list of tuple(-s), containing the text of the recognized .wav audio file
+            and the path to this file.
         """
 
         # from _upload method we get voice_records_paths which is a concatenation
@@ -37,21 +44,25 @@ class VoiceRecordsRecognizer:
         return recognized_audio_data_with_paths
 
     def _upload(self, src_dir: str, voice_records_names: Optional[Sequence[str]] = None) -> \
-            Tuple[Sequence[AudioData], Sequence[str]]:
-        """
-        Uploads .wav file(-s) and transforms them to AudioData format
+            Tuple[Sequence[AudioData], Sequence[WindowsPath]]:
+        """Uploads .wav file(-s) and transforms them to speech_recognition.AudioData format,
+        which is necessary for further speech recognition.
 
+        Parameters
+        ----------
         src_dir : str
-            Source directory with audio file(-s)
+            Source directory of .wav audio file(-s).
+
         voice_records_names : Optional[Sequence[str]]
-            Concrete audio file(-s). If not provided, all files from src_dic will be uploaded
+            Optional. if this parameter is not specified,
+            then all .wav files inside the provided src_dir will be uploaded and recognized.
 
         Returns
         -------
         audio_data : Sequence[AudioData]
-            Voice records, converted in AudioData format, which is appropriate for speech_recognition package.
-        voice_records_paths : Sequence[str]
-
+            Voice records, converted into AudioData format, which is necessary for speech_recognition package.
+        voice_records_paths : Sequence[WindowsPath]
+            Paths to recognized .wav audio files.
         """
 
         # transform src path to a Path object
