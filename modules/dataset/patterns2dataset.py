@@ -7,7 +7,6 @@ from pandas import DataFrame
 class BloodPressureDictType(TypedDict):
     """Complex data type for storing time stamps of audio records, their paths, as well as
     blood pressure and heart rates these records contain"""
-    # TODO: should I move all custom datatypes to a separate module??
     time_stamp: Sequence[datetime]
     record_path: Sequence[WindowsPath]
     sys: Sequence[int]
@@ -15,13 +14,14 @@ class BloodPressureDictType(TypedDict):
     heart_rate: Sequence[int]
 
 
+# TODO: should I move all custom datatypes to a separate module??
 class Patterns2Dataset:
     """"""
 
     def __init__(self):
         pass
 
-    def blood_pressure_heart_rate(self, records_patterns_and_paths: Sequence[Sequence[WindowsPath], Sequence[int],
+    def blood_pressure_heart_rate(self, records_patterns_and_paths: Tuple[Sequence[WindowsPath], Sequence[int],
                                                                              Sequence[int], Sequence[int]],
                                   as_df: bool = False) -> Union[BloodPressureDictType, DataFrame]:
         """Prepares a dataset in the form of python dict which in turn has BloodPressureDictType structure.
@@ -40,9 +40,6 @@ class Patterns2Dataset:
             if as_df is True.
         """
 
-        # len(records_patterns_and_paths[0]): [0] could have been [1], [2] or [3] as well
-        # we just need the number of records available
-        # for record_idx in range(len(records_patterns_and_paths[0])):
         dataset = {'time_stamp': self._time_stamp(records_patterns_and_paths[0]),  # getting time stamps
                    'record_name': records_patterns_and_paths[0],
                    'sys': records_patterns_and_paths[1],

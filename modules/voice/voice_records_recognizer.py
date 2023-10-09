@@ -26,7 +26,8 @@ class VoiceRecordsRecognizer:
         -------
         recognized_audio_data_with_paths : Sequence[Tuple[str, WindowsPath]]
             Returns a list of tuple(-s), containing the text of the recognized .wav audio file
-            and the path to this file.
+            and the path to every
+            file.
         """
 
         # from _upload method we get voice_records_paths which is a concatenation

@@ -7,7 +7,7 @@ class PatternRecognizer:
 
     @staticmethod
     def blood_pressure_heart_rate(recognized_audio_data_with_paths: Sequence[Tuple[str, WindowsPath]]) -> \
-            Sequence[Sequence[WindowsPath], Sequence[int], Sequence[int], Sequence[int]]:
+            Tuple[Sequence[WindowsPath], Sequence[int], Sequence[int], Sequence[int]]:
         """Recognizes systolic and diastolic blood pressure as well as heart rate
         in texts of recognized audio files.
 
