@@ -4,7 +4,7 @@
 
 Welcome to the Speech4Tracking project repository! Our mission is to develop a user-friendly application that allows individuals to effortlessly input systolic and diastolic blood pressure readings, along with heart rates, using voice commands. This innovative concept aims to simplify and expedite a process that typically involves multiple manual steps.
 
-Our primary objective for the "Speech4Tracking" project is to develop a Minimum Viable Product (MVP) that empowers users to conduct A/B tests. These tests will help users assess the impact of dietary supplements (e.g., Creatine, Ashwagandha) or antihypertensive medications on their blood pressure and heart rates.
+Our primary objective for the "Speech4Tracking" project is to develop a Minimum Viable Product (MVP) that empowers users to conduct A/B tests. These tests will help users assess the impact of dietary supplements (e.g., Creatine, Ashwagandha etc.), antihypertensive medications or simply coffee on their blood pressure and heart rates.
 
 This functionality is especially valuable for individuals sensitive to changes in blood pressure due to dietary supplements or medications. It offers a practical tool for monitoring health and making informed decisions.
 
