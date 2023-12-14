@@ -4,6 +4,9 @@ __pycache__/
 .idea/
 *.pyc
 
+# do not track docs conserning the project
+docs_theory_etc/
+
 # Don't track sketches of modules
 notebooks/
 python_speech_recognition_master/
