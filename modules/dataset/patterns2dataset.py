@@ -2,19 +2,9 @@ from datetime import datetime  # class should start with a capital letter!
 from pathlib import WindowsPath
 from typing import Sequence, Tuple, Union, TypedDict
 from pandas import DataFrame
+from custom_datatypes import BloodPressureDictType
 
 
-class BloodPressureDictType(TypedDict):
-    """Complex data type for storing time stamps of audio records, their paths, as well as
-    blood pressure and heart rates these records contain"""
-    time_stamp: Sequence[datetime]
-    record_path: Sequence[WindowsPath]
-    sys: Sequence[int]
-    dia: Sequence[int]
-    heart_rate: Sequence[int]
-
-
-# TODO: should I move all custom datatypes to a separate module??
 class Patterns2Dataset:
     """"""
 
