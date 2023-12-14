@@ -5,14 +5,11 @@ __pycache__/
 *.pyc
 
 # Don't track sketches of modules
-notebooks/sketches/
+notebooks/
 python_speech_recognition_master/
 
 # Don't track data
 data/
-
-# Don't track todo-list
-todo.py
 
 # Don't track any pictures.
 *.jpg
@@ -32,3 +29,10 @@ todo.py
 *.txt
 # except for
 !requirements.txt
+
+# don't track databases
+*.db
+
+# don't track learing materials
+docs_theory_etc/
+papers/
