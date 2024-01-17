@@ -2,6 +2,20 @@ import re
 from pathlib import Path
 from typing import Sequence, Tuple
 
+# fixme: measurement #1: systolic 120 diastolic 60: if there is no heart rate or dia or sys, then None will be returned
+#  and the .mean cannot be calculated with None
+#  was the measurement recognized correctly? [Y/n] Y
+#  [[120], [60], [None]]
+#  Traceback (most recent call last):
+#   File "C:\Users\andri\YandexDisk\Projects\ml_nlp_mentoring_with_roman\projects\speech4tracking\main.py", line 229, in <module>
+#     run_app()
+#   File "C:\Users\andri\YandexDisk\Projects\ml_nlp_mentoring_with_roman\projects\speech4tracking\main.py", line 117, in run_app
+#     all_measurements = np.mean(np.array(all_measurements), axis=1)
+#   File "C:\Users\andri\anaconda3\envs\speech4tracking\lib\site-packages\numpy\core\fromnumeric.py", line 3504, in mean
+#     return _methods._mean(a, axis=axis, dtype=dtype,
+#   File "C:\Users\andri\anaconda3\envs\speech4tracking\lib\site-packages\numpy\core\_methods.py", line 121, in _mean
+#     ret = um.true_divide(
+#  TypeError: unsupported operand type(s) for /: 'NoneType' and 'int'
 
 class PatternRecognizer:
     """This class helps to find patterns of our interest in texts of recognized audio files."""
