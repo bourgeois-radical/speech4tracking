@@ -17,7 +17,7 @@ from typing import Sequence, Tuple
 #     ret = um.true_divide(
 #  TypeError: unsupported operand type(s) for /: 'NoneType' and 'int'
 
-class PatternRecognizer:
+class PatternRecognizerSpeech2Text:
     """This class helps to find patterns of our interest in texts of recognized audio files."""
 
     def __init__(self):
@@ -28,7 +28,7 @@ class PatternRecognizer:
 
     def blood_pressure_heart_rate_from_voice(self, recognized_voice_inputs: list):
         """Finds systolic and diastolic blood pressure as well as heart rate
-        in recognized voice inputs.
+        in recognized speech2text inputs.
 
         Parameters
         ----------

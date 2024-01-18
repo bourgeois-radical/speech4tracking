@@ -19,15 +19,15 @@ https://ec.europa.eu/eurostat/web/products-eurostat-news/-/edn-20210929-1
 # TODO: check, whether the distributions approximately normal
 
 from scipy.stats import ttest_rel
-from typing import Tuple, List
-import hypothesis_testing.parameters
+from typing import List
+import modules.hypothesis_testing.parameters
 import numpy as np
 
 
 class TTest:
     def __init__(self, provided_p_value = None):
         if provided_p_value is None:
-            self.specified_p_value = hypothesis_testing.parameters.PREDEFINED_P_VALUE
+            self.specified_p_value = modules.hypothesis_testing.parameters.PREDEFINED_P_VALUE
         else:
             self.specified_p_value = provided_p_value
 

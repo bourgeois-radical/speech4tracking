@@ -27,7 +27,7 @@ for text in texts:
     utterance_name = utterance_name[:round(len(text)*(2/3))]
     utterance_name = re.sub('\s', '_', utterance_name)
     utterance_name = Path(utterance_name.rstrip('_'))
-    utterance_path = output_dir / utterance_name.with_suffix('.mp3')
+    utterance_path = output_dir / utterance_name.with_suffix('.wav')
 
     scipy.io.wavfile.write(utterance_path, rate=model.config.sampling_rate, data=output.numpy().T)
 

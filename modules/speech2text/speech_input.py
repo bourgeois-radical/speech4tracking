@@ -8,7 +8,7 @@ class SpeechRecognizer:
     def __init__(self):
         pass
 
-    def voice2text(self):
+    def speech2text(self):
         recognizer = Recognizer()
         mic = Microphone()
 
