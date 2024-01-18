@@ -3,7 +3,7 @@ import string
 from gtts import gTTS
 from pathlib import Path
 # local modules
-from texts_for_tts import texts
+from texts_for_tts import texts, texts_2
 
 output_dir = Path.cwd() / 'generated_utterances' / 'google_tts'
 
@@ -13,7 +13,7 @@ else:
     Path.mkdir(Path.cwd() / 'generated_utterances' / 'google_tts')
 
 # TODO: generate in mp.3 and wav in subfolders inside google_tts
-for text in texts:
+for text in texts_2:
     utterance = gTTS(text, lang='en', tld='com.au')
     utterance_name = text.translate(str.maketrans('', '', string.punctuation))  # remove punctuation
     # TODO: add if a file's name after mult by 2/3 is longer than 20, than restrict to 20

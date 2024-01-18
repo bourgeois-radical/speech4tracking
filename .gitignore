@@ -39,3 +39,6 @@ data/
 # don't track learing materials
 docs_theory_etc/
 papers/
+/modules/text2speech/check_palysond.py
+/modules/text2speech/check_pydub.py
+/modules/text2speech/choosing_model.md

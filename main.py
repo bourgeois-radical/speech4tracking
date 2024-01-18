@@ -1,7 +1,9 @@
+import os
 import numpy as np
 from modules.speech2text.speech_input import SpeechRecognizer
 from modules.speech2text.pattern_recognizer import PatternRecognizerSpeech2Text
 from modules.text2speech.pattern_recognizer import PatternRecognizerText2Speech
+from modules.text2speech.tts_current_measurement import save_current_voice_input_as_mp3
 from databases.bp_hr_aff_database import BpHrAffectDatabase
 from modules.hypothesis_testing.t_test import TTest
 from enum import Enum
@@ -93,9 +95,9 @@ def run_app():
                             # TODO: suggestion to take a break between measurements
 
                             #  measurement + 1 so that we show user his measurements starting from 1, not from 0
-                            ready_for_measurement = input(
+                            affect_presence_yes_or_no = input(
                                 f'\nhave you done your {measurement + 1} measurement? are you ready to input it? [Y/n] ')
-                            if ready_for_measurement == 'Y':  # TODO: Добавить yes, y etc. через Enum
+                            if affect_presence_yes_or_no == 'Y':  # TODO: Добавить yes, y etc. через Enum
                                 print('we are listening to you...')
                                 # FIXME: speech_recognition.exceptions.UnknownValueError if there is no speech input
 
@@ -122,9 +124,9 @@ def run_app():
                                 # if a measurement was successfully recognized we quit the first 'while' loop
                                 # and go to the next iteration/measurement inside 'for' loop
                                 break
-                            elif ready_for_measurement == 'n':
+                            elif affect_presence_yes_or_no == 'n':
                                 print('\nnot a problem! we are waiting for you :)')
-                            elif ready_for_measurement != 'Y' and ready_for_measurement != 'n':
+                            elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
                                 print('\nplease, type in Y or n')
 
                     # after having collected all measurements (str) in one list, we must find the rates (int) of interest
@@ -142,12 +144,12 @@ def run_app():
 
                     # add a affect
                     while True:
-                        affect_presence = input(
+                        affect_presence_yes_or_no = input(
                             '\ndo you do any activities (gym, work etc.), '
                             'take any medication or consume any substances (e.g. antihypertensives, coffee etc.)\n'
                             'the effects of which you want to control regarding your blood pressure? [Y/n] ')
 
-                        if affect_presence == 'Y':
+                        if affect_presence_yes_or_no == 'Y':
 
                             affect = input('\nwhat can potentially affect your rates? please, tell me what it is\n')
                             # remove spaces at the beginning and at the end of the string:
@@ -162,11 +164,11 @@ def run_app():
                                 elif correct_affect_input != 'Y' and correct_affect_input != 'n':
                                     print('\nplease, type in Y or n')
 
-                        elif affect_presence == 'n':
+                        elif affect_presence_yes_or_no == 'n':
                             affect = 'no_affect'
                             print("\nroger that! it will be marked as 'no_affect'")
                             break
-                        elif affect_presence != 'Y' and affect_presence != 'n':
+                        elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
                             print('\nplease, type in Y or n')
 
                     # create a db if it doesn't exist already
@@ -266,7 +268,7 @@ def run_app():
                     #  TODO: is it a good alternative? str(Path(utterances_src_dir) / Path('please_tell_me_the_number_of_measureme.mp3'))
                     playsound('modules/text2speech/generated_utterances/google_tts/please_tell_me_the_number_of_measureme.mp3')
                     number_of_measurements_user_voice_input = speech_recognizer.speech2text()
-                    print(number_of_measurements_user_voice_input)
+                    # print(number_of_measurements_user_voice_input)
                     n_measurements = PatternRecognizerText2Speech.recognize_number(number_of_measurements_user_voice_input)
 
                     if n_measurements <= 0: # TODO: other exceptions as well!
@@ -279,7 +281,7 @@ def run_app():
                     # print(f'\nplease prepare your blood pressure monitor and give your input in the following format:')
                     playsound('modules/text2speech/generated_utterances/google_tts/please_prepare_your_blood_pressure_monitor_and_give_your.mp3')
                     # print("\n'systolic #number#, diastolic #number#, heart rate #number#'")
-                    playsound('modules/text2speech/generated_utterances/google_tts/pronounce_systolic_and_then_provide_a_number_say_diastolic_and_then_a_number_eventually_pronounce_h.mp3')
+                    playsound('modules/text2speech/generated_utterances/google_tts/pronounce_systolic_and_then_provide_a_number.mp3')
 
                     # TODO: input/output interation remains inside the main.py module
                     #  but the processing of the inputs must be performed outside the main.py
@@ -289,38 +291,77 @@ def run_app():
                             # TODO: suggestion to take a break between measurements
 
                             #  measurement + 1 so that we show user his measurements starting from 1, not from 0
-                            ready_for_measurement = input(
-                                f'\nhave you done your {measurement + 1} measurement? are you ready to input it? [Y/n] ')
-                            if ready_for_measurement == 'Y':  # TODO: Добавить yes, y etc. через Enum
-                                print('we are listening to you...')
+                            #ready_for_measurement = input(
+                                # f'\nhave you done your {measurement + 1} measurement? are you ready to input it? [Y/n] ')
+                            # TODO: provide more precise utterances: have you done your first/second/third/forth measurement
+                            playsound('modules/text2speech/generated_utterances/google_tts/have_you_done_your_measurement_are_you_ready_to_inp.mp3')
+                            affect_presence_yes_or_no = speech_recognizer.speech2text()
+                            affect_presence_yes_or_no = PatternRecognizerText2Speech.recognize_yes_or_no(affect_presence_yes_or_no)
+
+                            if affect_presence_yes_or_no == 'Y':  # TODO: Добавить yes, y etc. через Enum
+                                # print('we are listening to you...')
+                                playsound('modules/text2speech/generated_utterances/google_tts/we_are_listening.mp3')
                                 # FIXME: speech_recognition.exceptions.UnknownValueError if there is no speech input
 
                                 # TODO: 132/88 mmHg !!!!!!!(often spoken “132 over 88”)
                                 # TODO: try to input in other languages
+
+                                # TODO: pattern_55
                                 user_voice_input = speech_recognizer.speech2text()
-                                print(f'measurement #{measurement + 1}: {user_voice_input}')
+                                # print(f'measurement #{measurement + 1}: {user_voice_input}')
+                                save_current_voice_input_as_mp3(user_voice_input)
+                                playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+
+                                #  immediately delete file after having just created it
+                                if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+                                    os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+                                else:
+                                    print('The file does not exist')
+                                # TODO: pattern_55
+
 
                                 # check values before adding to the overall list
                                 while True:
-                                    correctly_recognized = input('\nwas the measurement recognized correctly? [Y/n] ')
-                                    if correctly_recognized == 'Y':
+                                    playsound('modules/text2speech/generated_utterances/google_tts/was_the_measurement_recognized_correctl.mp3')
+                                    # correctly_recognized = input('\nwas the measurement recognized correctly? [Y/n] ')
+                                    correctly_recognized = speech_recognizer.speech2text()
+                                    correctly_recognized = PatternRecognizerText2Speech.recognize_yes_or_no(
+                                        correctly_recognized)
+                                    if correctly_recognized == 'Y': # TODO: change to MATCH-CASE + use ENUM
                                         all_measurements.append(user_voice_input)
                                         break
                                     elif correctly_recognized == 'n':
                                         # TODO: manual correction
-                                        print("\nlet's try once again!")
-                                        print('we are listening to you...')
+                                        #print("\nlet's try once again!")
+                                        playsound('modules/text2speech/generated_utterances/google_tts/lets_try_once.mp3')
+                                        #print('we are listening to you...')
+
+                                        # TODO: pattern_55
+                                        playsound('modules/text2speech/generated_utterances/google_tts/we_are_listening.mp3')
                                         user_voice_input = speech_recognizer.speech2text()
-                                        print(f'measurement #{measurement + 1}: {user_voice_input}')
+                                        #print(f'measurement #{measurement + 1}: {user_voice_input}')
+                                        save_current_voice_input_as_mp3(user_voice_input)
+                                        playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+
+                                        #  immediately delete file after having just created it
+                                        if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+                                            os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+                                        else:
+                                            print('The file does not exist')
+                                        # TODO: patern_55
+
                                     else:  # correctly_recognized != 'Y' and correctly_recognized != 'n':
+                                        # TODO: "I didn't get you! Do u want to repeat an input or leave an app?"
                                         print('\nplease, type in Y or n')
+                                        # playsound('modules/text2speech/generated_utterances/google_tts/)
 
                                 # if a measurement was successfully recognized we quit the first 'while' loop
                                 # and go to the next iteration/measurement inside 'for' loop
                                 break
-                            elif ready_for_measurement == 'n':
+                            elif affect_presence_yes_or_no == 'n':
                                 print('\nnot a problem! we are waiting for you :)')
-                            elif ready_for_measurement != 'Y' and ready_for_measurement != 'n':
+                                playsound('modules/text2speech/generated_utterances/google_tts/not_a_problem_we_are_wait.mp3')
+                            elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
                                 print('\nplease, type in Y or n')
 
                     # after having collected all measurements (str) in one list, we must find the rates (int) of interest
@@ -333,36 +374,70 @@ def run_app():
                     systolic = all_measurements[0]
                     diastolic = all_measurements[1]
                     heart_rate = all_measurements[2]
-                    print(f'\nhere are the average rates from {n_measurements} measurement(-s): \nsys: {systolic}'
-                          f'\ndia: {diastolic} \nhr: {heart_rate}')
 
-                    # add a affect
+                    # print(f'\nhere are the average rates from {n_measurements} measurement(-s): \nsys: {systolic}'
+                    #       f'\ndia: {diastolic} \nhr: {heart_rate}')
+
+                    average_rates = f'here are the average rates from {n_measurements} measurement(-s): systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}'
+                    save_current_voice_input_as_mp3(average_rates)
+                    # TODO: rename 'current_measurement' to 'current_input' or whatever. Use an f string with a variable so that one can refactor it
+                    playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+
+                    #  immediately delete file after having just created it
+                    if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+                        os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+                    else:
+                        print('The file does not exist')
+
+                    # add an affect
                     while True:
-                        affect_presence = input(
-                            '\ndo you do any activities (gym, work etc.), '
-                            'take any medication or consume any substances (e.g. antihypertensives, coffee etc.)\n'
-                            'the effects of which you want to control regarding your blood pressure? [Y/n] ')
+                        # affect_presence = input(
+                        #     '\ndo you do any activities (gym, work etc.), '
+                        #     'take any medication or consume any substances (e.g. antihypertensives, coffee etc.)\n'
+                        #     'the effects of which you want to control regarding your blood pressure? [Y/n] ')
+                        playsound('modules/text2speech/generated_utterances/google_tts/do_you_do_any_activities_gym_work_etc_take_any_medication.mp3')
+                        affect_presence_yes_or_no = speech_recognizer.speech2text()
+                        affect_presence_yes_or_no = PatternRecognizerText2Speech.recognize_yes_or_no(affect_presence_yes_or_no)
+                        if affect_presence_yes_or_no == 'Y':
 
-                        if affect_presence == 'Y':
+                            # affect = input('\nwhich affect do you take then? please, typy in: ')
+                            playsound('modules/text2speech/generated_utterances/google_tts/what_can_potentially_affect_your_rates_pleas.mp3')
+                            affect = speech_recognizer.speech2text()
+                            # print(f'measurement #{measurement + 1}: {user_voice_input}')
+                            save_current_voice_input_as_mp3(affect)
 
-                            affect = input('\nwhich affect do you take then? please, typy in: ')
                             # remove spaces at the beginning and at the end of the string:
                             affect = affect.strip()
                             if len(affect) > 0:
-                                correct_affect_input = input(f"\nis your input correct? '{affect}' [Y/n] ")
+                                # correct_affect_input = input(f"\nis your input correct? '{affect}' [Y/n] ")
+                                playsound('modules/text2speech/generated_utterances/google_tts/is_your_input_correct.mp3')
+                                playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+                                #  immediately delete file after having just created it
+                                if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+                                    os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+                                else:
+                                    print('The file does not exist')
+
+                                correct_affect_input = speech_recognizer.speech2text()
+                                correct_affect_input = PatternRecognizerText2Speech.recognize_yes_or_no(
+                                    correct_affect_input)
+
                                 if correct_affect_input == 'Y':
-                                    print('\nnice!')
+                                    # print('\nnice!')
+                                    playsound('modules/text2speech/generated_utterances/google_tts/nic.mp3')
                                     break
                                 elif correct_affect_input == 'n':
-                                    print("\nlet's try once again!")
+                                    # print("\nlet's try once again!")
+                                    playsound('modules/text2speech/generated_utterances/google_tts/lets_try_once.mp3')
                                 elif correct_affect_input != 'Y' and correct_affect_input != 'n':
                                     print('\nplease, type in Y or n')
 
-                        elif affect_presence == 'n':
+                        elif affect_presence_yes_or_no == 'n':
                             affect = 'no_affect'
-                            print("\nroger that! it will be marked as 'no_affect'")
+                            # print("\nroger that! it will be marked as 'no_affect'")
+                            playsound('modules/text2speech/generated_utterances/google_tts/roger_that_it_will_be_marked.mp3')
                             break
-                        elif affect_presence != 'Y' and affect_presence != 'n':
+                        elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
                             print('\nplease, type in Y or n')
 
                     # create a db if it doesn't exist already

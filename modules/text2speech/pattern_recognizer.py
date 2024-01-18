@@ -7,6 +7,9 @@ import re
 
 
 class PatternRecognizerText2Speech():
+    #
+    # def __init__(self):
+    #     pass
 
     def recognize_number(input_string):
         # Define a regular expression pattern for matching numbers one to four
@@ -31,6 +34,28 @@ class PatternRecognizerText2Speech():
             raise Exception('Something went wrong. More than one number was found.')
         else:
             return number_mapping[matches[0].lower()]
+
+    def recognize_yes_or_no(input_string):
+
+        # Convert the input string to lowercase for case-insensitive matching
+        input_string = input_string.lower()
+
+        # Define patterns for positive and negative responses
+        positive_patterns = ['yes', "i'm ready", 'i am ready', "let's go", "yes, i've done", 'yes, i have done']
+        negative_patterns = ['no', "i'm not ready", 'no, i haven not done it yet', ]
+
+        # Check for positive patterns
+        for pattern in positive_patterns:
+            if re.search(pattern, input_string):
+                return 'Y'
+
+        # Check for negative patterns
+        for pattern in negative_patterns:
+            if re.search(pattern, input_string):
+                return 'n'
+
+        # If no pattern is matched, return None or any default value as per your requirement
+        return None
 
 
 if __name__ == '__main__':

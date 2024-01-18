@@ -28,3 +28,8 @@ texts = [
     'it was a pleasure! See you!',
     'the number of measurements must be a natural number. Restart the app. Otherwise, good bye!'
 ]
+
+texts_2 = [
+    'we are listening to you...',
+    'nice!'
+]
