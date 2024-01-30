@@ -52,8 +52,6 @@ class BpHrAffectDatabase:
         cursor.execute(self.insert_row_to_bp_hr_aff_query, row_to_insert)
         connection.commit()
 
-        print('\nyour record has been successfully added to the database!')
-
         return 200
 
     def close_connection(self, connection):
