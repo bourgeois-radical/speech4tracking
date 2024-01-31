@@ -26,6 +26,33 @@ from pathlib import Path
 #         else:
 #             inside_else
 
+def choose_interface_type() :
+    """
+
+    Returns
+    -------
+
+    """
+
+    print('choose the interface by typing in the number 1 or 2 \n'
+                               'note:\n'
+                               '1: the app responds you via text\n'
+                               '2: the app responds you via speech\n')
+
+    while True:
+        try:
+            interface_type = int(input())
+
+        except ValueError:
+            print(f'invalid input! it must be an integer corresponding to a valid interface option.\n'
+                  'please, type in your choice once again')
+        else:
+            if interface_type in [1, 2]:
+                return interface_type
+                break
+            else:
+                print('the integer you typed in does not correspond to any valid interface option.\n'
+                      'please, type in your choice once again')
 
 def print_menu():
     print("""\nwhat are we gonna do?
@@ -40,24 +67,18 @@ def print_menu():
 def handle_user_menu_response() -> int:
 
     while True:
-
-        user_response = input()
-
         try:
-            integer_user_response = isinstance(user_response, int)
-            return int(user_response)
+            user_response = int(input())
         except ValueError:
-            print('invalid input. Please enter a valid integer.')
-
-        repeat = input('do you want to repeat the input? (Y/n): ').lower()
-        if repeat != 'Y':
-            print('existing the app.')
-            break
-
-
-
-
-
+            print(f'invalid input! it must be an integer corresponding to a valid menu option.\n'
+                  'please, type in your choice once again')
+        else:
+            if user_response in [1, 2, 3, 4, 5, 6]:
+                return user_response
+                break
+            else:
+                print('the integer you typed in does not correspond to any valid menu option.\n'
+                      'please, type in your choice once again')
 
 class MenuChoice(Enum):
     VOICE_INPUT = 1
@@ -248,7 +269,8 @@ def add_measurements_to_db(systolic, diastolic, heart_rate, affect):
     # close connection to the db
     bp_hr_aff_db.close_connection(connection=connection)
 
-    return 'your record has been successfully added to the database!'
+    print('the measurement has been successfully added to database!')
+    return  # actually, returns None. It's a procedure in normal programming languages
 
 
 def perform_demo_hypothesis_test():
@@ -302,15 +324,16 @@ def perform_demo_hypothesis_test():
     # )
     # plt.show()
 
-    return 'Demo hypothesis test for systolic blood pressure has been successfully performed!'
+    return  # actually, returns None. It's a procedure in normal programming languages
 
 
 def run_app():
+
+    exit_the_app = False
+
     while True:  # choosing type of interface: text based or speech based
-        interface_type = int(input('choose the interface by typing in the number 1 or 2 \n'
-                                   'note:\n'
-                                   '1: the app responds you via text\n'
-                                   '2: the app responds you via speech\n'))
+
+        interface_type = choose_interface_type()
 
         if interface_type == AppResponseInterface.TEXT.value:
 
@@ -319,15 +342,10 @@ def run_app():
 
             while True:
                 print_menu()
-                # TODO: check whether the input is integer
-
                 response = handle_user_menu_response()
-                print(response)
-                # speech2text input
-                match response:
-                    case MenuChoice.VOICE_INPUT.value:  # TODO: use match/case instead of if/else
 
-                          # TODO: вынести либо до while, но лучше в модуль
+                match response:
+                    case MenuChoice.VOICE_INPUT.value:
 
                         print('please, type in the number of measurements you wanna take:')
                         # TODO: prevent typing in of characters, str etc. as well. NATURAL NUMBERS ONLY!
@@ -347,14 +365,11 @@ def run_app():
                             number_of_measuremnts=n_measurements,
                             all_measurements=all_user_voice_inputs)
 
-                        print('WE ARE HERE')
                         affect = add_affect()
 
-                        print('HI')
                         add_measurements_to_db(systolic=average_systolic, diastolic=average_diastolic,
                                                heart_rate=average_heart_rate, affect=affect)
 
-                        print('WE ARE NOW HERE')
                     case MenuChoice.KEYBOARD_INPUT.value:
                         keybord_input()
                     case MenuChoice.IMPORT_FROM_WAV.value:
@@ -364,8 +379,12 @@ def run_app():
                     case MenuChoice.PERFORM_HYPOTHESIS_TEST.value:
                         perform_demo_hypothesis_test()
                     case MenuChoice.EXIT.value:
-                        print('it was a pleasure! See you!')
+                        exit_the_app = True
+                        print('exiting the app...\nit was a pleasure! See you!')
                         break
+
+        if exit_the_app is True:
+            break
 
         elif interface_type == AppResponseInterface.SPEECH.value:
 

@@ -42,7 +42,7 @@ class BpHrAffectDatabase:
         except Error as error:
             print(error)
 
-        return 200
+        return  # actually, returns None. It's a procedure in normal programming languages
 
     def insert_row(self, connection, systolic, diastolic, heart_rate, affect):
         """Insert a row with sys and dia pressure as well as heart rate and affect"""
@@ -52,13 +52,13 @@ class BpHrAffectDatabase:
         cursor.execute(self.insert_row_to_bp_hr_aff_query, row_to_insert)
         connection.commit()
 
-        return 200
+        return  # actually, returns None. It's a procedure in normal programming languages
 
     def close_connection(self, connection):
 
         connection.close()
 
-        return 200
+        return  # actually, returns None. It's a procedure in normal programming languages
 
     def create_demo_connection(self, db_path: str):
         """This database if for demonstration purposes only"""
@@ -93,7 +93,8 @@ class BpHrAffectDatabase:
             print(error)
 
         print('the demo table has been successfully created!')
-        return 200
+
+        return  # actually, returns None. It's a procedure in normal programming languages
 
     def retrieve_measurements_for_demo_test(self, connection, rate_of_interest: str, affected_by: str) -> \
             List[Tuple[int, str, int, int, int, str]]:
