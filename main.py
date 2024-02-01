@@ -8,11 +8,8 @@ from databases.bp_hr_aff_database import BpHrAffectDatabase
 from modules.hypothesis_testing.t_test import TTest
 from enum import Enum
 from playsound import playsound
-from typing import Sequence
+from typing import Sequence, Union
 from pathlib import Path
-
-
-
 
 
 # def kukaracha (before_while, before_if, inside_if, inside_elif, inside_else):
@@ -26,7 +23,14 @@ from pathlib import Path
 #         else:
 #             inside_else
 
-def choose_interface_type() :
+
+INTERFACE_OPTIONS_DICT = {
+                        1: 'the app responds you via text',
+                        2: 'the app responds you via speech'
+                    }
+
+
+def choose_interface_type(interface_options: dict = INTERFACE_OPTIONS_DICT) -> Union[int, None]:
     """
 
     Returns
@@ -35,9 +39,9 @@ def choose_interface_type() :
     """
 
     print('choose the interface by typing in the number 1 or 2 \n'
-                               'note:\n'
-                               '1: the app responds you via text\n'
-                               '2: the app responds you via speech\n')
+          'note:\n'
+          '1: the app responds you via text\n'
+          '2: the app responds you via speech\n')
 
     while True:
         try:
@@ -45,16 +49,26 @@ def choose_interface_type() :
 
         except ValueError:
             print(f'invalid input! it must be an integer corresponding to a valid interface option.\n'
-                  'please, type in your choice once again')
+                  'please, type in your choice once again\n')
         else:
-            if interface_type in [1, 2]:
+            if interface_type in interface_options.keys():
                 return interface_type
-                break
             else:
                 print('the integer you typed in does not correspond to any valid interface option.\n'
-                      'please, type in your choice once again')
+                      'please, type in your choice once again\n')
+
+                # return
+                # with return: the menu is printed once again if the input was wrong
+                # without return: the menu is printed only once since we loop inside this function
+
 
 def print_menu():
+    """
+
+    Returns
+    -------
+
+    """
     print("""\nwhat are we gonna do?
     1. add a record (speech2text)
     2. add a record (keyboard)
@@ -64,8 +78,20 @@ def print_menu():
     6. exit
         """)
 
-def handle_user_menu_response() -> int:
+    return
 
+
+MENU_OPTIONS_DICT = {
+                        1: 'add a record (speech2text)',
+                        2: 'add a record (keyboard)',
+                        3: 'add a record(-s) (.wav file)',
+                        4: 'print n last records',
+                        5: 'perform a hypothesis test',
+                        6: 'exit'
+                    }
+
+
+def handle_user_menu_response(menu_options: dict = MENU_OPTIONS_DICT) -> Union[int, None]:
     while True:
         try:
             user_response = int(input())
@@ -73,14 +99,48 @@ def handle_user_menu_response() -> int:
             print(f'invalid input! it must be an integer corresponding to a valid menu option.\n'
                   'please, type in your choice once again')
         else:
-            if user_response in [1, 2, 3, 4, 5, 6]:
+            if user_response in menu_options.keys():
                 return user_response
-                break
             else:
                 print('the integer you typed in does not correspond to any valid menu option.\n'
                       'please, type in your choice once again')
 
+            # return
+            # with return: the menu is printed once again if the input was wrong
+            # without return: the menu is printed only once since we loop inside this function
+
+
+NUMBER_OF_MEASUREMENTS_LIST = [1, 2, 3]
+
+
+def input_number_of_measurements(number_of_measurements: list = NUMBER_OF_MEASUREMENTS_LIST):
+
+    print('please, type in the number of measurements you want to take:')
+
+    while True:
+        user_response = input()
+        if user_response == 'quit':
+            return 'quit_entering_the_number_of_measurements'
+        else:
+            try:
+                user_response = int(user_response)
+                # if user_response == 478:
+                #     break
+            except ValueError:
+                print(f'invalid input! it must be a natural number.\n'
+                      'please, type in the number of measurements you want to take once again')
+            else:
+                if user_response in number_of_measurements:
+                    return user_response
+                else:
+                    print("the input you provided does not correspond to allowed number of measurements.\n"
+                          "you can take 1, 2 or 3 measurements\n"
+                          "you can type in your choice once again or type in 'quit' to quit")
+                    # TODO: allow user to leave typing in the number of measurements
+
+
 class MenuChoice(Enum):
+    """ """
     VOICE_INPUT = 1
     KEYBOARD_INPUT = 2
     IMPORT_FROM_WAV = 3
@@ -101,10 +161,12 @@ def print_n_last_records():
     raise NotImplementedError('Sorry, last-records-printing is not available at the moment. '
                               'We are working on implementing this feature and appreciate your understanding.')
 
+
 def keybord_input():
     # print('please, type in your record')
     raise NotImplementedError('Sorry, keyboard input is not available at the moment. We are working on '
                               'implementing this feature and appreciate your understanding.')
+
 
 def import_from_wav():
     # print('provide the names of the .wav files')
@@ -328,7 +390,6 @@ def perform_demo_hypothesis_test():
 
 
 def run_app():
-
     exit_the_app = False
 
     while True:  # choosing type of interface: text based or speech based
@@ -341,22 +402,17 @@ def run_app():
             speech_recognizer = SpeechRecognizer()
 
             while True:
+
                 print_menu()
                 response = handle_user_menu_response()
 
                 match response:
                     case MenuChoice.VOICE_INPUT.value:
 
-                        print('please, type in the number of measurements you wanna take:')
-                        # TODO: prevent typing in of characters, str etc. as well. NATURAL NUMBERS ONLY!
-                        n_measurements = int(input())
-                        if n_measurements <= 0:
-                            print(
-                                'the number of measurements must be a natural number. Restart the app. Otherwise, good bye!')
-                            break
-                        print(f'\nok! we are ready to record {n_measurements} measurements')
-                        print(f'\nplease prepare your blood pressure monitor and give your input in the following format:')
-                        print("\n'systolic #number#, diastolic #number#, heart rate #number#'")
+                        n_measurements = input_number_of_measurements()
+
+                        if n_measurements == 'quit_entering_the_number_of_measurements':
+                            continue
 
                         all_user_voice_inputs = iterative_input_of_measurements(number_of_measurements=n_measurements,
                                                                                 speech_recognizer_instance=speech_recognizer)
@@ -388,21 +444,18 @@ def run_app():
 
         elif interface_type == AppResponseInterface.SPEECH.value:
 
-            utterances_src_dir = 'modules/text2speech/generated_utterances/google_tts'
+            speech_recognizer = SpeechRecognizer()
 
             while True:
                 # TODO: menu must be in a audio format as well! Generate utterances for menu
-                print_menu()
                 # TODO: check whether the input is integer
                 #  if not type(x) is int:
                 #     raise TypeError("Only integers are allowed")
-                response = int(input())
-                all_measurements = []
+                print_menu()
+                response = handle_user_menu_response()
 
                 # speech2text input
                 if response == MenuChoice.VOICE_INPUT.value:
-
-                    speech_recognizer = SpeechRecognizer()  # TODO: вынести либо до while, но лучше в модуль
 
                     # print('please, type in the number of measurements the user wanna take
                     #  TODO: is it a good alternative? str(Path(utterances_src_dir) / Path('please_tell_me_the_number_of_measureme.mp3'))
