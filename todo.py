@@ -37,6 +37,6 @@
 # TODO: update requirements
 #   install python 3.12
 
-# TODO: use match/case instead of if/else
-
 # TODO: unittests for each module!!!
+
+# TODO: generate utterances for menu (speech-based interface)

@@ -36,6 +36,8 @@ class TestPatternRecognizer(ParametrizedTestCase):
             param('I wanna take [2] measurements', ValueError, id='invalid_input_type_list'), # ValueError don't need 2
             param("I wanna take {'three': 3} measurements", ValueError, id='invalid_input_type_dict'), # Exception: Something went wrong. More than one number was found.
             # TODO: if more than one number was found, how to restart the input. Should be this exception inside the main.py maybe?
+            param('I wanna take measurements', ValueError, id='no_number'),
+            param('I would like to take us to measurements', ValueError, id="two times 'to'")
         ])
     def test_recognize_number(self, user_input: str, expected: Union[int, ValueError]) -> None:
         # TODO: ask Roman why shouldn't I initialize an instance of a class here? Like pattern_recognizer = PatternRecognizerText2Speech()

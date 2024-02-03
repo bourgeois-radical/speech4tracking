@@ -11,7 +11,6 @@ from playsound import playsound
 from typing import Sequence, Union
 from pathlib import Path
 
-
 # def kukaracha (before_while, before_if, inside_if, inside_elif, inside_else):
 #         before_while
 #     While True:
@@ -25,9 +24,9 @@ from pathlib import Path
 
 
 INTERFACE_OPTIONS_DICT = {
-                        1: 'the app responds you via text',
-                        2: 'the app responds you via speech'
-                    }
+    1: 'the app responds you via text',
+    2: 'the app responds you via speech'
+}
 
 
 def choose_interface_type(interface_options: dict = INTERFACE_OPTIONS_DICT) -> Union[int, None]:
@@ -82,13 +81,13 @@ def print_menu():
 
 
 MENU_OPTIONS_DICT = {
-                        1: 'add a record (speech2text)',
-                        2: 'add a record (keyboard)',
-                        3: 'add a record(-s) (.wav file)',
-                        4: 'print n last records',
-                        5: 'perform a hypothesis test',
-                        6: 'exit'
-                    }
+    1: 'add a record (speech2text)',
+    2: 'add a record (keyboard)',
+    3: 'add a record(-s) (.wav file)',
+    4: 'print n last records',
+    5: 'perform a hypothesis test',
+    6: 'exit'
+}
 
 
 def handle_user_menu_response(menu_options: dict = MENU_OPTIONS_DICT) -> Union[int, None]:
@@ -110,11 +109,10 @@ def handle_user_menu_response(menu_options: dict = MENU_OPTIONS_DICT) -> Union[i
             # without return: the menu is printed only once since we loop inside this function
 
 
-NUMBER_OF_MEASUREMENTS_LIST = [1, 2, 3]
+ALLOWED_NUMBER_OF_MEASUREMENTS_LIST = [1, 2, 3]
 
 
-def input_number_of_measurements(number_of_measurements: list = NUMBER_OF_MEASUREMENTS_LIST):
-
+def input_number_of_measurements(allowed_number_of_measurements: list = ALLOWED_NUMBER_OF_MEASUREMENTS_LIST):
     print('please, type in the number of measurements you want to take:')
 
     while True:
@@ -130,7 +128,7 @@ def input_number_of_measurements(number_of_measurements: list = NUMBER_OF_MEASUR
                 print(f'invalid input! it must be a natural number.\n'
                       'please, type in the number of measurements you want to take once again')
             else:
-                if user_response in number_of_measurements:
+                if user_response in allowed_number_of_measurements:
                     return user_response
                 else:
                     print("the input you provided does not correspond to allowed number of measurements.\n"
@@ -236,12 +234,12 @@ def iterative_input_of_measurements(number_of_measurements: int, speech_recogniz
     return all_measurements
 
 
-def calculate_average_rates(number_of_measuremnts: int, all_measurements: Sequence[str]) -> Sequence[int]:
+def calculate_average_rates(all_measurements: Sequence[str]) -> Sequence[int]:
     """After having collected all measurements (str) in one list, we must find the rates (int) of interest.
 
     Parameters
     ----------
-    number_of_measuremnts : int
+    number_of_measurements : int
     all_measurements : Sequence[str]
 
     Returns
@@ -260,7 +258,8 @@ def calculate_average_rates(number_of_measuremnts: int, all_measurements: Sequen
     systolic = all_measurements[0]
     diastolic = all_measurements[1]
     heart_rate = all_measurements[2]
-    print(f'\nhere are the average rates from {number_of_measuremnts} measurement(-s): \nsys: {systolic}'
+    # TODO: change allowed_number_of_measurements to len(all_measurements)
+    print(f'\nhere are the average rates from {len(all_measurements)} measurement(-s): \nsys: {systolic}'
           f'\ndia: {diastolic} \nhr: {heart_rate}')
 
     return systolic, diastolic, heart_rate
@@ -389,6 +388,192 @@ def perform_demo_hypothesis_test():
     return  # actually, returns None. It's a procedure in normal programming languages
 
 
+# speech modules:
+
+def input_number_of_measurements_speech_based(speech_recognizer_instance: SpeechRecognizer,
+                                              allowed_number_of_measurements: list = ALLOWED_NUMBER_OF_MEASUREMENTS_LIST):
+    # print('please, type in the number of measurements the user wanna take
+    playsound(
+        'modules/text2speech/generated_utterances/google_tts/please_tell_me_the_number_of_measureme.mp3')
+
+    while True:
+        number_of_measurements_user_voice_input = speech_recognizer_instance.speech2text()
+        print(number_of_measurements_user_voice_input)
+
+        try:
+            n_measurements = PatternRecognizerText2Speech.recognize_number(
+                number_of_measurements_user_voice_input)
+
+        except ValueError:
+            # TODO: is it ok to catch an Exception?
+            # the number of measurements must be a natural number. Restart the app. Otherwise, good bye!
+            playsound(
+                'modules/text2speech/generated_utterances/google_tts/the_number_of_measurements_must_be_a_natural_number_Restart.mp3')
+
+        else:
+            if n_measurements in allowed_number_of_measurements:
+                return n_measurements
+
+    playsound(
+        'modules/text2speech/generated_utterances/google_tts/please_prepare_your_blood_pressure_monitor_and_give_your.mp3')
+    # print("\n'systolic #number#, diastolic #number#, heart rate #number#'")
+    playsound(
+        'modules/text2speech/generated_utterances/google_tts/pronounce_systolic_and_then_provide_a_number.mp3')
+
+    return n_measurements
+
+
+def iterative_input_of_measurements_speech_based(number_of_measurements: int,
+                                                 speech_recognizer_instance: SpeechRecognizer):
+    """
+
+    Parameters
+    ----------
+    number_of_measurements
+    speech_recognizer_instance
+
+    Returns
+    -------
+
+    """
+
+    def block_of_generated_utterances_prepare_blood_pressure_monitor_and_pronounce_measurements():
+        playsound(
+            'modules/text2speech/generated_utterances/google_tts/please_prepare_your_blood_pressure_monitor_and_give_your.mp3')
+        # print("\n'systolic #number#, diastolic #number#, heart rate #number#'")
+        playsound(
+            'modules/text2speech/generated_utterances/google_tts/pronounce_systolic_and_then_provide_a_number.mp3')
+
+        return
+
+    def user_input_of_measurements_and_check_their_correctness() -> list:
+
+        all_measurements = []
+        # TODO: make it possible to input more than one measurement
+        for measurement in range(number_of_measurements):
+            # kukaracha
+            while True:
+                # TODO: suggestion to take a break between measurements
+                # TODO: !!!provide more precise utterances: have you done your first/second/third/forth measurement!!!!
+                playsound(
+                    'modules/text2speech/generated_utterances/google_tts/have_you_done_your_measurement_are_you_ready_to_inp.mp3')
+                is_ready_to_input = speech_recognizer_instance.speech2text()
+                is_ready_to_input = PatternRecognizerText2Speech.recognize_yes_or_no(
+                    is_ready_to_input)
+
+                if is_ready_to_input is True:  # TODO: Add yes, y etc. with Enum???
+                    playsound('modules/text2speech/generated_utterances/google_tts/we_are_listening.mp3')
+                    # FIXME: speech_recognition.exceptions.UnknownValueError if there is no speech input
+                    # TODO: 132/88 mmHg !!!!!!!(often spoken “132 over 88”)
+                    # TODO: try to input in other languages (it seems, it doesn't work)
+
+                    # TODO: pattern! define a function for generation of current measurements
+                    user_voice_input = speech_recognizer_instance.speech2text()
+                    save_current_voice_input_as_mp3(user_voice_input)
+                    playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+
+                    #  immediately delete the generated audio-file
+                    if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+                        os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+                    else:
+                        print('The file does not exist')
+                    # TODO: end of the pattern
+
+                    # check values before adding to the overall list
+                    while True:
+                        playsound(
+                            'modules/text2speech/generated_utterances/google_tts/was_the_measurement_recognized_correctl.mp3')
+                        is_correctly_recognized = speech_recognizer_instance.speech2text()
+                        is_correctly_recognized = PatternRecognizerText2Speech.recognize_yes_or_no(
+                            is_correctly_recognized)
+                        if is_correctly_recognized is True:  # TODO: change to MATCH-CASE + use ENUM
+                            all_measurements.append(user_voice_input)
+                            break
+                        elif is_correctly_recognized is False:
+                            # TODO: manual correction
+                            playsound(
+                                'modules/text2speech/generated_utterances/google_tts/lets_try_once.mp3')
+                            break # nested loop
+
+                        else:
+                            playsound(
+                                'modules/text2speech/generated_utterances/google_tts/I_didnt_get_you_please_just_s.mp3')
+                # else:
+                    # TODO: user is not ready to input
+                break # main while loop and go to the for loop
+
+        return all_measurements
+
+    match number_of_measurements:
+
+        case 1:
+            playsound('modules/text2speech/generated_utterances/google_tts/ok_we_are_ready_to_take_one.mp3')
+            # TODO: ask the user, whether he needs these two instructions down below
+            block_of_generated_utterances_prepare_blood_pressure_monitor_and_pronounce_measurements()
+            all_measurements = user_input_of_measurements_and_check_their_correctness()
+            return all_measurements
+
+        case 2:
+            playsound('modules/text2speech/generated_utterances/google_tts/ok_we_are_ready_to_take_two.mp3')
+            # TODO: ask the user, whether he needs these two instructions down below
+            block_of_generated_utterances_prepare_blood_pressure_monitor_and_pronounce_measurements()
+            all_measurements = user_input_of_measurements_and_check_their_correctness()
+            return all_measurements
+
+        case 3:
+            playsound('modules/text2speech/generated_utterances/google_tts/ok_we_are_ready_to_take_three.mp3')
+            # TODO: ask the user, whether he needs these two instructions down below
+            block_of_generated_utterances_prepare_blood_pressure_monitor_and_pronounce_measurements()
+            all_measurements = user_input_of_measurements_and_check_their_correctness()
+            return all_measurements
+
+        case 4:
+            playsound('modules/text2speech/generated_utterances/google_tts/ok_we_are_ready_to_take_four.mp3')
+            # TODO: ask the user, whether he needs these two instructions down below
+            block_of_generated_utterances_prepare_blood_pressure_monitor_and_pronounce_measurements()
+            all_measurements = user_input_of_measurements_and_check_their_correctness()
+            return all_measurements
+
+
+def calculate_average_rates_speech_based(all_measurements: Sequence[str]) -> Sequence[int]:
+    """After having collected all measurements (str) in one list, we must find the rates (int) of interest.
+
+    Parameters
+    ----------
+    number_of_measurements : int
+    all_measurements : Sequence[str]
+
+    Returns
+    -------
+    systolic : int
+    diastolic : int
+    heart_rate : int
+
+    """
+    pattern_recognizer = PatternRecognizerSpeech2Text()
+    all_measurements = pattern_recognizer.blood_pressure_heart_rate_from_voice(
+        recognized_voice_inputs=all_measurements)
+    # count the mean from n (the number is provided by user) measurements
+    all_measurements = np.mean(np.array(all_measurements), axis=1)
+    systolic = all_measurements[0]
+    diastolic = all_measurements[1]
+    heart_rate = all_measurements[2]
+
+    average_rates = f'here are the average rates from {len(all_measurements)} measurement(-s): systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}'
+    # TODO: add utterance: 'here are your average rates'
+    save_current_voice_input_as_mp3(average_rates)
+    # TODO: rename 'current_measurement' to 'current_input' or whatever. Use an f string with a variable so that one can refactor it
+    playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+
+    #  immediately delete file after having just created it
+    if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+        os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+    else:
+        print('The file does not exist')
+
+    return systolic, diastolic, heart_rate
+
+
 def run_app():
     exit_the_app = False
 
@@ -418,7 +603,6 @@ def run_app():
                                                                                 speech_recognizer_instance=speech_recognizer)
 
                         average_systolic, average_diastolic, average_heart_rate = calculate_average_rates(
-                            number_of_measuremnts=n_measurements,
                             all_measurements=all_user_voice_inputs)
 
                         affect = add_affect()
@@ -454,230 +638,34 @@ def run_app():
                 print_menu()
                 response = handle_user_menu_response()
 
-                # speech2text input
-                if response == MenuChoice.VOICE_INPUT.value:
+                match response:
+                    case MenuChoice.VOICE_INPUT.value:
+                        n_measurements = input_number_of_measurements_speech_based(
+                            speech_recognizer_instance=speech_recognizer
+                        )
 
-                    # print('please, type in the number of measurements the user wanna take
-                    #  TODO: is it a good alternative? str(Path(utterances_src_dir) / Path('please_tell_me_the_number_of_measureme.mp3'))
-                    playsound(
-                        'modules/text2speech/generated_utterances/google_tts/please_tell_me_the_number_of_measureme.mp3')
-                    number_of_measurements_user_voice_input = speech_recognizer.speech2text()
-                    # print(number_of_measurements_user_voice_input)
-                    n_measurements = PatternRecognizerText2Speech.recognize_number(
-                        number_of_measurements_user_voice_input)
+                        # if n_measurements == 'quit_entering_the_number_of_measurements':
+                        #     continue
 
-                    if n_measurements <= 0:  # TODO: other exceptions as well!
-                        # the number of measurements must be a natural number. Restart the app. Otherwise, good bye!
-                        playsound(
-                            'modules/text2speech/generated_utterances/google_tts/the_number_of_measurements_must_be_a_natural_number_Restart.mp3')
+                        all_user_voice_inputs = iterative_input_of_measurements_speech_based(
+                            number_of_measurements=n_measurements,
+                            speech_recognizer_instance=speech_recognizer
+                        )
+
+                        average_systolic, average_diastolic, average_heart_rate = calculate_average_rates_speech_based(
+                            all_measurements=all_user_voice_inputs)
+
+                    case MenuChoice.KEYBOARD_INPUT.value:
+                        print('please, type in your record')
+                    case MenuChoice.IMPORT_FROM_WAV.value:
+                        print('provide the names of the .wav files')
+                    case MenuChoice.PRINT_N_LAST_RECORDS.value:
+                        print_n_last_records()
+                    case MenuChoice.PERFORM_HYPOTHESIS_TEST.value:
+                        perform_demo_hypothesis_test()
+                    case MenuChoice.EXIT.value:
+                        print('it was a pleasure! See you!')
                         break
-                    # TODO: match-case: 1, 2, 3, 4 measurements
-                    # print(f'\nok! we are ready to record {number_of_measurements} measurements')
-                    playsound('modules/text2speech/generated_utterances/google_tts/ok_we_are_ready_to_take_m.mp3')
-                    # print(f'\nplease prepare your blood pressure monitor and give your input in the following format:')
-                    playsound(
-                        'modules/text2speech/generated_utterances/google_tts/please_prepare_your_blood_pressure_monitor_and_give_your.mp3')
-                    # print("\n'systolic #number#, diastolic #number#, heart rate #number#'")
-                    playsound(
-                        'modules/text2speech/generated_utterances/google_tts/pronounce_systolic_and_then_provide_a_number.mp3')
-
-                    # TODO: input/output interation remains inside the main.py module
-                    #  but the processing of the inputs must be performed outside the main.py
-                    for measurement in range(n_measurements):
-                        # kukaracha
-                        while True:
-                            # TODO: suggestion to take a break between measurements
-
-                            #  measurement + 1 so that we show user his measurements starting from 1, not from 0
-                            # ready_for_measurement = input(
-                            # f'\nhave you done your {measurement + 1} measurement? are you ready to input it? [Y/n] ')
-                            # TODO: provide more precise utterances: have you done your first/second/third/forth measurement
-                            playsound(
-                                'modules/text2speech/generated_utterances/google_tts/have_you_done_your_measurement_are_you_ready_to_inp.mp3')
-                            affect_presence_yes_or_no = speech_recognizer.speech2text()
-                            affect_presence_yes_or_no = PatternRecognizerText2Speech.recognize_yes_or_no(
-                                affect_presence_yes_or_no)
-
-                            if affect_presence_yes_or_no == 'Y':  # TODO: Добавить yes, y etc. через Enum
-                                # print('we are listening to you...')
-                                playsound('modules/text2speech/generated_utterances/google_tts/we_are_listening.mp3')
-                                # FIXME: speech_recognition.exceptions.UnknownValueError if there is no speech input
-
-                                # TODO: 132/88 mmHg !!!!!!!(often spoken “132 over 88”)
-                                # TODO: try to input in other languages
-
-                                # TODO: pattern_55
-                                user_voice_input = speech_recognizer.speech2text()
-                                # print(f'measurement #{measurement + 1}: {user_voice_input}')
-                                save_current_voice_input_as_mp3(user_voice_input)
-                                playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
-
-                                #  immediately delete file after having just created it
-                                if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
-                                    os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
-                                else:
-                                    print('The file does not exist')
-                                # TODO: pattern_55
-
-                                # check values before adding to the overall list
-                                while True:
-                                    playsound(
-                                        'modules/text2speech/generated_utterances/google_tts/was_the_measurement_recognized_correctl.mp3')
-                                    # correctly_recognized = input('\nwas the measurement recognized correctly? [Y/n] ')
-                                    correctly_recognized = speech_recognizer.speech2text()
-                                    correctly_recognized = PatternRecognizerText2Speech.recognize_yes_or_no(
-                                        correctly_recognized)
-                                    if correctly_recognized == 'Y':  # TODO: change to MATCH-CASE + use ENUM
-                                        all_measurements.append(user_voice_input)
-                                        break
-                                    elif correctly_recognized == 'n':
-                                        # TODO: manual correction
-                                        # print("\nlet's try once again!")
-                                        playsound(
-                                            'modules/text2speech/generated_utterances/google_tts/lets_try_once.mp3')
-                                        # print('we are listening to you...')
-
-                                        # TODO: pattern_55
-                                        playsound(
-                                            'modules/text2speech/generated_utterances/google_tts/we_are_listening.mp3')
-                                        user_voice_input = speech_recognizer.speech2text()
-                                        # print(f'measurement #{measurement + 1}: {user_voice_input}')
-                                        save_current_voice_input_as_mp3(user_voice_input)
-                                        playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
-
-                                        #  immediately delete file after having just created it
-                                        if os.path.exists(
-                                                'modules/text2speech/generated_utterances/current_measurement.mp3'):
-                                            os.remove(
-                                                'modules/text2speech/generated_utterances/current_measurement.mp3')
-                                        else:
-                                            print('The file does not exist')
-                                        # TODO: patern_55
-
-                                    else:  # correctly_recognized != 'Y' and correctly_recognized != 'n':
-                                        # TODO: "I didn't get you! Do u want to repeat an input or leave an app?"
-                                        print('\nplease, type in Y or n')
-                                        # playsound('modules/text2speech/generated_utterances/google_tts/)
-
-                                # if a measurement was successfully recognized we quit the first 'while' loop
-                                # and go to the next iteration/measurement inside 'for' loop
-                                break
-                            elif affect_presence_yes_or_no == 'n':
-                                print('\nnot a problem! we are waiting for you :)')
-                                playsound(
-                                    'modules/text2speech/generated_utterances/google_tts/not_a_problem_we_are_wait.mp3')
-                            elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
-                                print('\nplease, type in Y or n')
-
-                    # after having collected all measurements (str) in one list, we must find the rates (int) of interest
-                    pattern_recognizer = PatternRecognizerSpeech2Text()
-                    all_measurements = pattern_recognizer.blood_pressure_heart_rate_from_voice(
-                        recognized_voice_inputs=all_measurements)
-                    print(all_measurements)
-                    # count the mean from n (the number is provided by user) measurements
-                    all_measurements = np.mean(np.array(all_measurements), axis=1)
-                    systolic = all_measurements[0]
-                    diastolic = all_measurements[1]
-                    heart_rate = all_measurements[2]
-
-                    # print(f'\nhere are the average rates from {number_of_measurements} measurement(-s): \nsys: {systolic}'
-                    #       f'\ndia: {diastolic} \nhr: {heart_rate}')
-
-                    average_rates = f'here are the average rates from {n_measurements} measurement(-s): systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}'
-                    save_current_voice_input_as_mp3(average_rates)
-                    # TODO: rename 'current_measurement' to 'current_input' or whatever. Use an f string with a variable so that one can refactor it
-                    playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
-
-                    #  immediately delete file after having just created it
-                    if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
-                        os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
-                    else:
-                        print('The file does not exist')
-
-                    # add an affect
-                    while True:
-                        # affect_presence = input(
-                        #     '\ndo you do any activities (gym, work etc.), '
-                        #     'take any medication or consume any substances (e.g. antihypertensives, coffee etc.)\n'
-                        #     'the effects of which you want to control regarding your blood pressure? [Y/n] ')
-                        playsound(
-                            'modules/text2speech/generated_utterances/google_tts/do_you_do_any_activities_gym_work_etc_take_any_medication.mp3')
-                        affect_presence_yes_or_no = speech_recognizer.speech2text()
-                        affect_presence_yes_or_no = PatternRecognizerText2Speech.recognize_yes_or_no(
-                            affect_presence_yes_or_no)
-                        if affect_presence_yes_or_no == 'Y':
-
-                            # affect = input('\nwhich affect do you take then? please, typy in: ')
-                            playsound(
-                                'modules/text2speech/generated_utterances/google_tts/what_can_potentially_affect_your_rates_pleas.mp3')
-                            affect = speech_recognizer.speech2text()
-                            # print(f'measurement #{measurement + 1}: {user_voice_input}')
-                            save_current_voice_input_as_mp3(affect)
-
-                            # remove spaces at the beginning and at the end of the string:
-                            affect = affect.strip()
-                            if len(affect) > 0:
-                                # correct_affect_input = input(f"\nis your input correct? '{affect}' [Y/n] ")
-                                playsound(
-                                    'modules/text2speech/generated_utterances/google_tts/is_your_input_correct.mp3')
-                                playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
-                                #  immediately delete file after having just created it
-                                if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
-                                    os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
-                                else:
-                                    print('The file does not exist')
-
-                                correct_affect_input = speech_recognizer.speech2text()
-                                correct_affect_input = PatternRecognizerText2Speech.recognize_yes_or_no(
-                                    correct_affect_input)
-
-                                if correct_affect_input == 'Y':
-                                    # print('\nnice!')
-                                    playsound('modules/text2speech/generated_utterances/google_tts/nic.mp3')
-                                    break
-                                elif correct_affect_input == 'n':
-                                    # print("\nlet's try once again!")
-                                    playsound('modules/text2speech/generated_utterances/google_tts/lets_try_once.mp3')
-                                elif correct_affect_input != 'Y' and correct_affect_input != 'n':
-                                    print('\nplease, type in Y or n')
-
-                        elif affect_presence_yes_or_no == 'n':
-                            affect = 'no_affect'
-                            # print("\nroger that! it will be marked as 'no_affect'")
-                            playsound(
-                                'modules/text2speech/generated_utterances/google_tts/roger_that_it_will_be_marked.mp3')
-                            break
-                        elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
-                            print('\nplease, type in Y or n')
-
-                    # create a db if it doesn't exist already
-                    bp_hr_aff_db = BpHrAffectDatabase()
-                    connection = bp_hr_aff_db.create_connection(db_path='./databases/test.db')
-
-                    if connection is not None:
-                        bp_hr_aff_db.create_table(connection=connection)
-                    else:
-                        print('error! cannot create the databases connection')
-
-                    # add measurements to the db
-                    bp_hr_aff_db.insert_row(connection=connection, systolic=systolic, diastolic=diastolic,
-                                            heart_rate=heart_rate,
-                                            affect=affect)
-
-                    # close connection to the db
-                    bp_hr_aff_db.close_connection(connection=connection)
-
-                elif response == MenuChoice.KEYBOARD_INPUT.value:
-                    print('please, type in your record')
-                elif response == MenuChoice.IMPORT_FROM_WAV.value:
-                    print('provide the names of the .wav files')
-                elif response == MenuChoice.PRINT_N_LAST_RECORDS.value:
-                    print_n_last_records()
-                elif response == MenuChoice.PERFORM_HYPOTHESIS_TEST.value:
-                    perform_demo_hypothesis_test()
-                elif response == MenuChoice.EXIT.value:
-                    print('it was a pleasure! See you!')
-                    break
 
 
 if __name__ == '__main__':
