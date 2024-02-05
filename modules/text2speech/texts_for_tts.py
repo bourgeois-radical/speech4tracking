@@ -27,9 +27,10 @@ texts = [
     'error! cannot create the databases connection',
     'it was a pleasure! See you!',
     'the number of measurements must be a natural number. Restart the app. Otherwise, good bye!'
+    'the measurement has been successfully added to database!',
+    'nice!'
 ]
 
 texts_2 = [
-    'we are listening to you...',
-    'nice!'
+    'what are we gonna do?. 1. add a record. 2. add a record via keyboard. 3. add records from wav files. 4. print last records. 5. perform a hypothesis test.. 6. exit',
 ]

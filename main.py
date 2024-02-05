@@ -252,14 +252,14 @@ def calculate_average_rates(all_measurements: Sequence[str]) -> Sequence[int]:
     pattern_recognizer = PatternRecognizerSpeech2Text()
     all_measurements = pattern_recognizer.blood_pressure_heart_rate_from_voice(
         recognized_voice_inputs=all_measurements)
-    print(all_measurements)
     # count the mean from n (the number is provided by user) measurements
-    all_measurements = np.mean(np.array(all_measurements), axis=1)
-    systolic = all_measurements[0]
-    diastolic = all_measurements[1]
-    heart_rate = all_measurements[2]
+    all_measurements_np = np.mean(np.array(all_measurements), axis=1)
+    systolic = all_measurements_np[0]
+    diastolic = all_measurements_np[1]
+    heart_rate = all_measurements_np[2]
     # TODO: change allowed_number_of_measurements to len(all_measurements)
-    print(f'\nhere are the average rates from {len(all_measurements)} measurement(-s): \nsys: {systolic}'
+    # len(all_measurements[0]) because [[120, 121], [80, 90], [60, 70]]
+    print(f'\nhere are the average rates from {len(all_measurements[0])} measurement(-s): \nsys: {systolic}'
           f'\ndia: {diastolic} \nhr: {heart_rate}')
 
     return systolic, diastolic, heart_rate
@@ -277,12 +277,12 @@ def add_affect() -> str:
     """
 
     while True:
-        affect_presence_yes_or_no = input(
+        is_there_an_affect = input(
             '\ndo you do any activities (gym, work etc.), '
             'take any medication or consume any substances (e.g. antihypertensives, coffee etc.)\n'
             'the effects of which you want to control regarding your blood pressure? [Y/n] ')
 
-        if affect_presence_yes_or_no == 'Y':
+        if is_there_an_affect == 'Y':
 
             affect = input('\nwhat can potentially affect your rates? please, type in what it is\n')
             # remove spaces at the beginning and at the end of the string:
@@ -297,11 +297,11 @@ def add_affect() -> str:
                 elif correct_affect_input != 'Y' and correct_affect_input != 'n':
                     print('\nplease, type in Y or n')
 
-        elif affect_presence_yes_or_no == 'n':
+        elif is_there_an_affect == 'n':
             affect = 'no_affect'
             print("\nroger that! it will be marked as 'no_affect'")
             break
-        elif affect_presence_yes_or_no != 'Y' and affect_presence_yes_or_no != 'n':
+        else:
             print('\nplease, type in Y or n')
 
     return affect
@@ -389,6 +389,25 @@ def perform_demo_hypothesis_test():
 
 
 # speech modules:
+
+def print_menu_speech_based():
+    """
+
+    Returns
+    -------
+
+    """
+    print("""\nwhat are we gonna do?
+    1. add a record (speech2text)
+    2. add a record (keyboard)
+    3. add a record(-s) (.wav file)
+    4. print n last records
+    5. perform a hypothesis test
+    6. exit
+        """)
+    playsound('modules/text2speech/generated_utterances/google_tts/what_are_we_gonna_do_1_add_a_record_2_add_a_record_via_keyboard_3_add_records_from_wav_files_4_print_last_re.mp3')
+
+    return
 
 def input_number_of_measurements_speech_based(speech_recognizer_instance: SpeechRecognizer,
                                               allowed_number_of_measurements: list = ALLOWED_NUMBER_OF_MEASUREMENTS_LIST):
@@ -553,13 +572,19 @@ def calculate_average_rates_speech_based(all_measurements: Sequence[str]) -> Seq
     pattern_recognizer = PatternRecognizerSpeech2Text()
     all_measurements = pattern_recognizer.blood_pressure_heart_rate_from_voice(
         recognized_voice_inputs=all_measurements)
-    # count the mean from n (the number is provided by user) measurements
-    all_measurements = np.mean(np.array(all_measurements), axis=1)
-    systolic = all_measurements[0]
-    diastolic = all_measurements[1]
-    heart_rate = all_measurements[2]
 
-    average_rates = f'here are the average rates from {len(all_measurements)} measurement(-s): systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}'
+    print(all_measurements)
+    # count the mean from n (the number is provided by user) measurements
+    all_measurements_np = np.mean(np.array(all_measurements), axis=1)
+    systolic = all_measurements_np[0]
+    diastolic = all_measurements_np[1]
+    heart_rate = all_measurements_np[2]
+
+    # len(all_measurements[0]) because [[120, 121], [80, 90], [60, 70]]
+    if len(all_measurements[0]) == 1:
+        average_rates = f'only one measurement has been taken. systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}'
+    elif len(all_measurements[0]) > 1:
+        average_rates = f'here are the average rates from {len(all_measurements)} measurements. systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}'
     # TODO: add utterance: 'here are your average rates'
     save_current_voice_input_as_mp3(average_rates)
     # TODO: rename 'current_measurement' to 'current_input' or whatever. Use an f string with a variable so that one can refactor it
@@ -572,6 +597,95 @@ def calculate_average_rates_speech_based(all_measurements: Sequence[str]) -> Seq
         print('The file does not exist')
 
     return systolic, diastolic, heart_rate
+
+
+def add_affect_speech_based(speech_recognizer_instance: SpeechRecognizer) -> str:
+    """
+
+    Parameters
+    ----------
+    speech_recognizer_instance
+
+    Returns
+    -------
+
+    """
+    while True:
+
+        playsound('modules/text2speech/generated_utterances/google_tts/do_you_do_any_activities_gym_work_etc_take_any_medication.mp3')
+        is_there_an_affect = speech_recognizer_instance.speech2text()
+        is_there_an_affect = PatternRecognizerText2Speech.recognize_yes_or_no(is_there_an_affect)
+
+        if is_there_an_affect is True:
+
+            playsound(
+                'modules/text2speech/generated_utterances/google_tts/what_can_potentially_affect_your_rates_pleas.mp3')
+            affect = speech_recognizer_instance.speech2text()
+            affect = affect.strip()
+
+            save_current_voice_input_as_mp3(affect)
+
+            if len(affect) > 0:
+
+                playsound(
+                    'modules/text2speech/generated_utterances/google_tts/is_your_input_correct.mp3')
+                playsound('modules/text2speech/generated_utterances/current_measurement.mp3')
+                #  immediately delete file after having just created it
+                if os.path.exists('modules/text2speech/generated_utterances/current_measurement.mp3'):
+                    os.remove('modules/text2speech/generated_utterances/current_measurement.mp3')
+                else:
+                    print('The file does not exist')
+
+                is_affect_input_correct = speech_recognizer_instance.speech2text()
+                is_affect_input_correct = PatternRecognizerText2Speech.recognize_yes_or_no(
+                                        is_affect_input_correct)
+
+                if is_affect_input_correct is True:
+                    playsound('modules/text2speech/generated_utterances/google_tts/nic.mp3')
+                    break
+                elif is_affect_input_correct is False:
+                    playsound('modules/text2speech/generated_utterances/google_tts/lets_try_once.mp3')
+                    continue
+                else:
+                    playsound('modules/text2speech/generated_utterances/google_tts/I_didnt_get_you_please_just_s.mp3')
+                    continue
+
+        elif is_there_an_affect is False:
+            affect = 'no_affect'
+            playsound(
+                'modules/text2speech/generated_utterances/google_tts/roger_that_it_will_be_marked.mp3')
+            break
+        else:
+            print('\nplease, type in Y or n')
+
+    return affect
+
+
+def add_measurements_to_db_speech_based(systolic, diastolic, heart_rate, affect):
+    """
+
+    Returns
+    -------
+
+    """
+    bp_hr_aff_db = BpHrAffectDatabase()
+    connection = bp_hr_aff_db.create_connection(db_path='./databases/test.db')
+
+    if connection is not None:
+        bp_hr_aff_db.create_table(connection=connection)
+    else:
+        playsound('modules/text2speech/generated_utterances/google_tts/error_cannot_create_the_databa.mp3')
+
+    # add measurements to the db
+    bp_hr_aff_db.insert_row(connection=connection, systolic=systolic, diastolic=diastolic,
+                            heart_rate=heart_rate,
+                            affect=affect)
+
+    # close connection to the db
+    bp_hr_aff_db.close_connection(connection=connection)
+
+    playsound('modules/text2speech/generated_utterances/google_tts/the_measurement_has_been_successfully.mp3')
+    return  # actually, returns None. It's a procedure in normal programming languages
 
 
 def run_app():
@@ -635,7 +749,7 @@ def run_app():
                 # TODO: check whether the input is integer
                 #  if not type(x) is int:
                 #     raise TypeError("Only integers are allowed")
-                print_menu()
+                print_menu_speech_based()
                 response = handle_user_menu_response()
 
                 match response:
@@ -654,6 +768,13 @@ def run_app():
 
                         average_systolic, average_diastolic, average_heart_rate = calculate_average_rates_speech_based(
                             all_measurements=all_user_voice_inputs)
+
+                        affect = add_affect_speech_based(speech_recognizer_instance=speech_recognizer)
+
+                        add_measurements_to_db_speech_based(systolic=average_systolic, diastolic=average_diastolic,
+                                               heart_rate=average_heart_rate, affect=affect)
+
+
 
                     case MenuChoice.KEYBOARD_INPUT.value:
                         print('please, type in your record')
