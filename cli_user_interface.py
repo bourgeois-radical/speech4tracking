@@ -61,7 +61,7 @@ class CLIUserInterface(UserInterface):
 
         Returns
         -------
-         all_measurements : Sequence[str]
+         all_measurements_raw_utterances : Sequence[str]
             Voice inputs of a user in form of python string
 
         """
@@ -158,12 +158,10 @@ class CLIUserInterface(UserInterface):
     def db_success_message_to_user(self):
         print('the measurement has been successfully added to database!')
 
-    def calculate_average_rates(self, all_measurements: Sequence[str]) -> Sequence[int]:
+    def calculate_average_rates(self, all_measurements_raw_utterances: Sequence[str]) -> Sequence[int]:
 
-        systolic, diastolic, heart_rate = super().calculate_average_rates(all_measurements)
-        # TODO: change allowed_number_of_measurements to len(all_measurements)
-        # len(all_measurements[0]) because [[120, 121], [80, 90], [60, 70]]
-        print(f'\nhere are the average rates from {len(all_measurements[0])} measurement(-s): \nsys: {systolic}'
+        systolic, diastolic, heart_rate = super().calculate_average_rates(all_measurements_raw_utterances)
+        print(f'\nhere are the average rates from {len(all_measurements_raw_utterances)} measurement(-s): \nsys: {systolic}'
               f'\ndia: {diastolic} \nhr: {heart_rate}')
 
         return systolic, diastolic, heart_rate

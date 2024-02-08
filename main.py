@@ -95,7 +95,7 @@ def run_app():
                     all_user_voice_inputs = user_interface.iterative_input_of_measurements_from_user(
                         number_of_measurements=n_measurements)
                     average_systolic, average_diastolic, average_heart_rate = user_interface.calculate_average_rates(
-                        all_measurements=all_user_voice_inputs)
+                        all_measurements_raw_utterances=all_user_voice_inputs)
 
                     affect = user_interface.get_affect_from_user()
 

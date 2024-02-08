@@ -32,11 +32,15 @@
 #   in the case of text2speech we just need to generate audio version of our standard questions
 #   we normally ask a user and then reuse the generated files
 
-# TODO: ask a user whether he wants fully speech2text based interaction
-
 # TODO: update requirements
 #   install python 3.12
 
 # TODO: unittests for each module!!!
 
-# TODO: generate utterances for menu (speech-based interface)
+# TODO: I have chosen one measurement
+#   here are the average rates from 39 measurement(-s):
+#   sys: 120.0
+#   dia: 60.0
+#   hr: 55.0
+
+# TODO: in voice interface, the app doesn't pronounce the average

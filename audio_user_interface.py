@@ -238,12 +238,12 @@ class AudioUserInterface(UserInterface):
     def db_success_message_to_user(self):
         playsound('modules/text2speech/generated_utterances/google_tts/the_measurement_has_been_successfully.mp3')
 
-    def calculate_average_rates_speech_based(self, all_measurements: Sequence[str]) -> Sequence[int]:
+    def calculate_average_rates(self, all_measurements_raw_utterances: Sequence[str]) -> Sequence[int]:
         """After having collected all measurements (str) in one list, we must find the rates (int) of interest.
 
         Parameters
         ----------
-        all_measurements : Sequence[str]
+        all_measurements_raw_utterances : Sequence[str]
 
         Returns
         -------
@@ -252,15 +252,15 @@ class AudioUserInterface(UserInterface):
         heart_rate : int
 
         """
-        systolic, diastolic, heart_rate = super().calculate_average_rates(all_measurements=all_measurements)
+        systolic, diastolic, heart_rate = super().calculate_average_rates(all_measurements=all_measurements_raw_utterances)
 
         average_rates = ''
-        # len(all_measurements[0]) because [[120, 121], [80, 90], [60, 70]]
-        if len(all_measurements[0]) == 1:
+        # len(all_measurements_raw_utterances[0]) because [[120, 121], [80, 90], [60, 70]]
+        if len(all_measurements_raw_utterances) == 1:
             average_rates = (f'only one measurement has been taken. systolic: {systolic} diastolic: {diastolic} '
                              f'heart rate: {heart_rate}')
-        elif len(all_measurements[0]) > 1:
-            average_rates = (f'here are the average rates from {len(all_measurements)} measurements. '
+        elif len(all_measurements_raw_utterances) > 1:
+            average_rates = (f'here are the average rates from {len(all_measurements_raw_utterances)} measurements. '
                              f'systolic: {systolic} diastolic: {diastolic} heart rate: {heart_rate}')
         # TODO: add utterance: 'here are your average rates'
         save_current_voice_input_as_mp3(average_rates)
