@@ -10,7 +10,7 @@ from typing import Sequence, Tuple
 #   File "C:\Users\andri\YandexDisk\Projects\ml_nlp_mentoring_with_roman\projects\speech4tracking\main.py", line 229, in <module>
 #     run_app()
 #   File "C:\Users\andri\YandexDisk\Projects\ml_nlp_mentoring_with_roman\projects\speech4tracking\main.py", line 117, in run_app
-#     all_measurements = np.mean(np.array(all_measurements), axis=1)
+#     all_measurements_raw_utterances = np.mean(np.array(all_measurements_raw_utterances), axis=1)
 #   File "C:\Users\andri\anaconda3\envs\speech4tracking\lib\site-packages\numpy\core\fromnumeric.py", line 3504, in mean
 #     return _methods._mean(a, axis=axis, dtype=dtype,
 #   File "C:\Users\andri\anaconda3\envs\speech4tracking\lib\site-packages\numpy\core\_methods.py", line 121, in _mean
