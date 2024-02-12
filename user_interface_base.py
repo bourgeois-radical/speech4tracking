@@ -130,7 +130,6 @@ class UserInterface(abc.ABC):
         all_measurements = (
             self.pattern_recognizer.blood_pressure_heart_rate_from_voice(recognized_voice_inputs=all_measurements))
         # count the mean from n (the number is provided by user) measurements
-        print(f'printing all_measurements_raw_utterances: {all_measurements}')
         all_measurements_np = np.mean(np.array(all_measurements), axis=1)
         systolic = all_measurements_np[0]
         diastolic = all_measurements_np[1]
