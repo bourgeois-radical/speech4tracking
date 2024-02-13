@@ -2,6 +2,7 @@ gTTS==2.5.0
 numpy==1.26.4
 pandas==2.2.0
 playsound==1.2.2
+PyAudio==0.2.14
 pydub==0.25.1
 scipy==1.12.0
 SpeechRecognition==3.10.0
