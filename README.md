@@ -71,14 +71,66 @@ _The app was developed under Python 3.10_
 
 
 # How to use
-Two intefaces
+_First message will ask you to choose one of these two interfaces:_
 
-# Weak points
+#### 1. Text interface:
 
-# TODO-list (for contributors)
+Text interface is more fast and stable. Speech input is intended only for blood pressure and heart rates inputs.
+
+#### 2. Audio interface:
+
+You interact with the app only via voice (except for menu choice). Audio interface takes more time to perform an input. It definitely makes more fun at least for the first time. 
+However, it still has some technical issues (see. "Under the Hood. Weak points" section down below).
+
+
+# Under the Hood. Weak points
+
+### Text interface:
+
+We utilized Google's ASR system using [SpeechRecognition](https://pypi.org/project/SpeechRecognition/) library. 
+We didn't find any precise information on which model is exactly used under the hood of the API. Nevertheless, we suppose the
+paper [Google USM: Scaling Automatic Speech Recognition Beyond 100 Languages](https://arxiv.org/abs/2303.01037) can answer
+the question regarding the model being used. 
+
+Text interface doesn't have any shortcomings which can hinder the usage of the app.
+
+### Audio interface:
+
+We utilized Google's TTS model for app's responses, using [gTTS](https://pypi.org/project/gTTS/) library.
+
+There are some issues with the audio interface:
+
+- In the current version of the app the instructions are always given, whereas in the text interface you may just don't read them.
+Here, in audio interface, they will always be pronounced by the app, and you will have to wait (see. "TODO-lists" section down below)
+- When the app asks "Have you done your measurement? Are you ready to input it? Tell me yes or no" you must answer immediately,
+which doesn't make much sense, since you may be still measuring your blood pressure (see. "TODO-lists" section down below)
+
+# TODO-lists (for contributors)
+
+<details>
+  <summary><b><i>Text interface:</i></b></summary>
+<ul>
+  <li>The list is to be enhanced...</li>
+</ul>
+</details>
+
+
+<details>
+  <summary><b><i>Audio interface:</i></b></summary>
+<ul>
+  <li>Provide an interface, where app's generated utterances have fewer instructions 
+(for the case, if the user has already gotten used to the app)</li>
+  <li>"Have you done your measurement? Are you ready to input it? Tell me yes or no". After that, the users' response must not 
+follow immediately (as it is now). The user can still be measuring his blood pressure. Additionally, 
+an error occurring in the case of negative ('no') response must be fixed</li>
+<li>Menu choice must be done via voice input</li>
+  <li>The list is to be enhanced...</li>
+</ul>
+</details>
+
 
 # Rights claim
-This is a non-profit open-source project. Feel free to contribute. As to the 14th of February 2024 all the code belongs to
+This is a non-profit open-source project. Feel free to contribute. As of February 14, 2024, all code belongs to
 Andrius Rumša (github: `bourgeois-radical`)
 
 
