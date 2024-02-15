@@ -25,6 +25,32 @@ need to memorize and manually input the numbers. Moreover, the posture required 
 blood pressure measurement may be inconvenient for using a keyboard, making voice 
 input particularly advantageous in such scenarios.
 
+**Hypothesis testing:**
+
+Let's consider a scenario where you're sensitive to caffeine but unsure about the amount of coffee that's safe for you. Utilizing speech4tracking can offer a straightforward approach to test this. Here's how:
+
+1. Begin by taking a series of baseline measurements of your blood pressure and heart rate over at least 30 days without consuming any coffee. Ensure consistency in the timing of these measurements each day.
+
+
+2. Next, introduce coffee into your daily routine for the following 30 days. For instance, you might choose to consume two cups of espresso per day. Again, maintain consistency in the timing of your coffee consumption.
+
+
+3. During this coffee consumption period, continue measuring your blood pressure and heart rate at the same time intervals as during the baseline period.
+
+
+4. After completing both phases (30 days without coffee and 30 days with coffee), you'll have gathered a total of 60 days' worth of data.
+
+
+5. Utilize statistical hypothesis testing to analyze whether there's a significant difference in your blood pressure and heart rate between the coffee consumption period and the baseline period.
+
+
+6. By conducting this analysis, you'll be able to determine whether caffeine intake has an observable effect on your blood pressure and heart rate.
+
+This systematic approach can provide valuable insights into how caffeine impacts your body, helping you make informed decisions about your coffee consumption.
+
+
+Similarly, you can also use this method to assess the impact of various factors such as engaging in sports activities, taking medications, and so forth.
+
 **Medical Recommendation:**
 
 The "Hochdruckliga" (High Blood Pressure League) recommends taking blood pressure readings three times consecutively 
@@ -92,11 +118,12 @@ We didn't find any precise information on which model is exactly used under the 
 paper [Google USM: Scaling Automatic Speech Recognition Beyond 100 Languages](https://arxiv.org/abs/2303.01037) can answer
 the question regarding the model being used. 
 
-Text interface doesn't have any shortcomings which can hinder the usage of the app.
+Text interface doesn't have any significant shortcomings which can hinder the usage of the app.
 
 ### Audio interface:
 
-We utilized Google's TTS model for app's responses, using [gTTS](https://pypi.org/project/gTTS/) library.
+We utilized Google's TTS model for app's responses, using [gTTS](https://pypi.org/project/gTTS/) library. As to our knowledge,
+unfortunately, there is no paper available for Google TTS model.
 
 There are some issues with the audio interface:
 
@@ -107,16 +134,46 @@ which doesn't make much sense, since you may be still measuring your blood press
 
 # TODO-lists (for contributors)
 
+Please, feel free to commit to the source code and to these TODO-lists.
+
 <details>
-  <summary><b><i>Text interface:</i></b></summary>
+  <summary><b><i>For both interfaces (user_interface_base.py):</i></b></summary>
 <ul>
-  <li>The list is to be enhanced...</li>
+  <li>To implement the second menu choice: adding measurements via keyboard</li>
+  <li>To implement the third menu choice: adding measurements via .wav files</li>
+  <li>To implement the forth menu choice: print n last records filtered by date or affect (activity, substance etc.)</li>
 </ul>
 </details>
 
 
 <details>
-  <summary><b><i>Audio interface:</i></b></summary>
+  <summary><b><i>Text interface (cl_user_interface.py):</i></b></summary>
+<ul>
+    <li>To implement a stable method for hypothesis testing (for each feature: systolic, diastolic, heart rates)</li>
+    <li>Add time frame / accepted time gap for hypothesis testing: if a user takes 'pure' measurements daily at 10 a.m.,
+then he should be allowed to take affected measurements under a reasonable time frame (from 9 to 11 a.m. for instance).
+If this condition is not satisfied, the app should warn that the t-test results may become untrustworthy</li>
+    <li>Allow user to specify data stemp manually</li>
+    <li>Audio input in other languages (German, Russian, Japanese etc.)</li>
+    <li>Add more patterns for voice input (like "132 over 77" etc.)</li>
+    <li>A user provides his age and the app automatically adjusts the following parameters: F0, shimmer and jitter 
+(especially useful for elderly people)
+for more accurate recognition</li>
+    <li>A user provides a few supervised inputs (speech and its text target) so that the ASR model can be fine-tuned for
+each user (definitely possible with Whisper)</li>
+<li>Provide a user interface with fewer instructions (for users, who got used to the app)</li>
+    <li>Automatic generation of reports for doctor (in PDF or whatever)</li>
+    <li>Unit tests for each method, not only for pattern recognizers!!!!
+e.g. if there is no systolic, diastolic or heart rate (a user simply didn't pronounce any of them), then None will be returned
+#  and NumPy's mean cannot be calculated with None (this Error must be fixed!). More unit-tests!!</li>
+
+
+</ul>
+</details>
+
+
+<details>
+  <summary><b><i>Audio interface (audio_user_interface.py):</i></b></summary>
 <ul>
   <li>Provide an interface, where app's generated utterances have fewer instructions 
 (for the case, if the user has already gotten used to the app)</li>
@@ -124,13 +181,15 @@ which doesn't make much sense, since you may be still measuring your blood press
 follow immediately (as it is now). The user can still be measuring his blood pressure. Additionally, 
 an error occurring in the case of negative ('no') response must be fixed</li>
 <li>Menu choice must be done via voice input</li>
-  <li>The list is to be enhanced...</li>
+  <li>Add utterances for different number of measurements:
+    a) "Have you done your first/second/third measurement?" 
+    b) "Here are the average rates from one/two/three measurements..."</li>
 </ul>
 </details>
 
 
 # Rights claim
 This is a non-profit open-source project. Feel free to contribute. As of February 14, 2024, all code belongs to
-Andrius Rumša (github: `bourgeois-radical`)
+Andrius Rumša (GitHub account: `bourgeois-radical`)
 
 

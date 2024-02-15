@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Union
 
 from user_interface_base import UserInterface
-from cli_user_interface import CLIUserInterface
+from cl_user_interface import CLIUserInterface
 from audio_user_interface import AudioUserInterface
 
 INTERFACE_OPTIONS_DICT = {
