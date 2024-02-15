@@ -53,7 +53,8 @@ Similarly, you can also use this method to assess the impact of various factors 
 
 **Medical Recommendation:**
 
-The "Hochdruckliga" (High Blood Pressure League) recommends taking blood pressure readings three times consecutively 
+The "Hochdruckliga" (High Blood Pressure League) [recommends](https://www.hochdruckliga.de/fileadmin/downloads/presse/pressemeldungen/2019/WHT_Hintergrund_Blutdruckmessen_in_5_Schritten.pdf) 
+taking blood pressure readings three times consecutively 
 for accuracy. The measurements must be averaged, data be timestamped and stored 
 in a database. We believe that leveraging speech recognition technology can significantly streamline these tasks. 
 
