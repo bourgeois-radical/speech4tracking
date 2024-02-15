@@ -188,6 +188,7 @@ then they should be allowed to take affected measurements within a reasonable ti
 </ul>
 </details>
 
+For parametrized unittest we use [unittest-parametrize](https://github.com/adamchainz/unittest-parametrize) package.
 
 # Rights claim
 This is a non-profit open-source project. Feel free to contribute. As of February 14, 2024, all code belongs to
