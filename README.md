@@ -183,8 +183,11 @@ follow immediately (as it is now). The user can still be measuring his blood pre
 an error occurring in the case of negative ('no') response must be fixed</li>
 <li>Menu choice must be done via voice input</li>
   <li>Add utterances for different number of measurements:
-    a) "Have you done your first/second/third measurement?" 
-    b) "Here are the average rates from one/two/three measurements..."</li>
+    <ul>
+    <li>"Have you done your first/second/third measurement?"</li>
+    <li>"Here are the average rates from one/two/three measurements..."</li>
+    </ul>
+</li>
 </ul>
 </details>
 
