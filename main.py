@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Union
 
 from user_interface_base import UserInterface
-from cl_user_interface import CLIUserInterface
+from cl_user_interface import CLUserInterface
 from audio_user_interface import AudioUserInterface
 
 INTERFACE_OPTIONS_DICT = {
@@ -65,7 +65,7 @@ def get_user_interface(interface_type: AppResponseInterface) -> UserInterface:
 
     match interface_type:
         case AppResponseInterface.TEXT:
-            user_interface = CLIUserInterface()
+            user_interface = CLUserInterface()
         case AppResponseInterface.SPEECH:
             user_interface = AudioUserInterface()
 
