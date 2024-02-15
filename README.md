@@ -64,85 +64,93 @@ _The app was developed under Python 3.10_
 
 **On Windows:**
 
-- [Download and install Python](https://www.python.org/downloads/release/python-31011/) (if not installed already)
+- [Download and install Python](https://www.python.org/downloads/release/python-31011/) (if not already installed )
 
 
-- [Download and install Anaconda](https://www.anaconda.com/download) (or feel free to use python virtual environment)
+- [Download and install Anaconda](https://www.anaconda.com/download) (or use a Python virtual environment)
 
 
-- [Download and install git](https://git-scm.com/downloads) (if not installed already)
+- [Download and install git](https://git-scm.com/downloads) (if not already installed)
 
 
-- Open `Anaconda Prompt` installed on your PC
+- Open `Anaconda Prompt` on your PC
 
 
-- Create a new environment by typing in: `conda create --name s4t` and then activate it `conda activate s4t`
+- Create a new environment by typing: `conda create --name s4t` and then activate it `conda activate s4t`
 
 
 - Install pipreqs: `pip install pipreqs`
 
 
-- Go to a directory, where you want to store the app and then get it by typing in: `git clone https://github.com/bourgeois-radical/speech4tracking`
+- Navigate to a directory, where you want to store the app and then get it by typing: `git clone https://github.com/bourgeois-radical/speech4tracking`
 
 
-- Go to the root folder of the project (`directory_you_have_chosen/speech4tracking`) and then run the following command inside the app's folder: `pip install -r requirements.txt`
+- Go to the root folder of the project (`directory_you_have_chosen/speech4tracking`) and install the required dependencies using: `pip install -r requirements.txt`
 
 
-- Eventually, run the app: `python main.py`
+- Finally, run the app: `python main.py`
 
 
 - Enjoy!
 
 
-**Next time, just open `Anaconda Promt`, activate the environment `conda activate s4t` and run the app `python main.py`**
+**Next time, simply open `Anaconda Promt`, activate the environment `conda activate s4t` and run the app using `python main.py`**
 
 
 # How to use
-_First message will ask you to choose one of these two interfaces:_
+_When you first launch the app, you'll be prompted to choose between two interfaces:_
 
 #### 1. Text interface:
 
-Text interface is more fast and stable. Speech input is intended only for blood pressure and heart rates inputs.
+The text interface is faster and more stable. Speech input is limited to blood pressure and heart rate inputs.
 
 #### 2. Audio interface:
 
-You interact with the app only via voice (except for menu choice). Audio interface takes more time to perform an input. It definitely makes more fun at least for the first time. 
-However, it still has some technical issues (see. "Under the Hood. Weak points" section down below).
+With the audio interface, you interact solely via voice (except for menu choices). 
+While using the audio interface may take more time for input, it can be more enjoyable, 
+especially for first-time users. However, please note that it may still encounter technical issues 
+(refer to the "Under the Hood. Weak Points" section below).
 
+# Under the Hood. Weak Points
 
-# Under the Hood. Weak points
+### Text Interface:
 
-### Text interface:
+We implemented Google's ASR (Automatic Speech Recognition) system using the 
+[SpeechRecognition](https://pypi.org/project/SpeechRecognition/) library. 
+Although precise details about the underlying model are not readily available, 
+we speculate that the paper 
+[Google USM: Scaling Automatic Speech Recognition Beyond 100 Languages](https://arxiv.org/abs/2303.01037) 
+might shed some light on this aspect.
 
-We utilized Google's ASR system using [SpeechRecognition](https://pypi.org/project/SpeechRecognition/) library. 
-We didn't find any precise information on which model is exactly used under the hood of the API. Nevertheless, we suppose the
-paper [Google USM: Scaling Automatic Speech Recognition Beyond 100 Languages](https://arxiv.org/abs/2303.01037) can answer
-the question regarding the model being used. 
+The text interface doesn't exhibit any significant shortcomings that could impede the app's usability.
 
-Text interface doesn't have any significant shortcomings which can hinder the usage of the app.
+### Audio Interface:
 
-### Audio interface:
-
-We utilized Google's TTS model for app's responses, using [gTTS](https://pypi.org/project/gTTS/) library. As to our knowledge,
-unfortunately, there is no paper available for Google TTS model.
+For the app's responses, we employed Google's TTS (Text-to-Speech) model via the 
+[gTTS](https://pypi.org/project/gTTS/) library. 
+Unfortunately, to our knowledge, there is no available paper detailing the Google TTS model.
 
 There are some issues with the audio interface:
 
-- In the current version of the app the instructions are always given, whereas in the text interface you may just don't read them.
-Here, in audio interface, they will always be pronounced by the app, and you will have to wait (see. "TODO-lists" section down below)
-- When the app asks "Have you done your measurement? Are you ready to input it? Tell me yes or no" you must answer immediately,
-which doesn't make much sense, since you may be still measuring your blood pressure (see. "TODO-lists" section down below)
+- In the current version of the app, instructions are always provided audibly. 
+Unlike the text interface where you might opt not to read them, in the audio interface,
+you'll always hear them pronounced by the app, which may require additional waiting time (see the "TODO-lists" section below).
+- When the app prompts, "Have you completed your measurement? 
+Are you ready to input it? Please respond with 'yes' or 'no'," 
+you must provide an immediate response. This requirement may be inconvenient 
+if you're still in the process of measuring your blood pressure 
+(see the "TODO-lists" section below).
 
 # TODO-lists (for contributors)
 
-Please, feel free to commit to the source code and to these TODO-lists.
+Please feel free to contribute to the source code and these TODO-lists.
 
 <details>
   <summary><b><i>For both interfaces (user_interface_base.py):</i></b></summary>
 <ul>
-  <li>To implement the second menu choice: adding measurements via keyboard</li>
-  <li>To implement the third menu choice: adding measurements via .wav files</li>
-  <li>To implement the forth menu choice: print n last records filtered by date or affect (activity, substance etc.)</li>
+  <li>Implement the second menu choice: adding measurements via keyboard</li>
+  <li>Implement the third menu choice: adding measurements via .wav files</li>
+  <li>Implement the fourth menu choice: print n last records filtered by date or effect (activity, substance etc.)</li>
 </ul>
 </details>
 
@@ -150,25 +158,17 @@ Please, feel free to commit to the source code and to these TODO-lists.
 <details>
   <summary><b><i>Text interface (cl_user_interface.py):</i></b></summary>
 <ul>
-    <li>To implement a stable method for hypothesis testing (for each feature: systolic, diastolic, heart rates)</li>
-    <li>Add time frame / accepted time gap for hypothesis testing: if a user takes 'pure' measurements daily at 10 a.m.,
-then he should be allowed to take affected measurements under a reasonable time frame (from 9 to 11 a.m. for instance).
-If this condition is not satisfied, the app should warn that the t-test results may become untrustworthy</li>
-    <li>Allow user to specify data stemp manually</li>
-    <li>Audio input in other languages (German, Russian, Japanese etc.)</li>
+    <li>Implement a stable method for hypothesis testing (for each feature: systolic, diastolic, heart rates)</li>
+    <li>Add a time frame / accepted time gap for hypothesis testing: if a user takes 'pure' measurements daily at 10 a.m.,
+then they should be allowed to take affected measurements within a reasonable time frame (e.g., from 9 to 11 a.m.). If this condition is not satisfied, the app should warn that the t-test results may become untrustworthy</li>
+    <li>Allow the user to specify data stamps manually</li>
+    <li>Support audio input in other languages (German, Russian, Japanese etc.)</li>
     <li>Add more patterns for voice input (like "132 over 77" etc.)</li>
-    <li>A user provides his age and the app automatically adjusts the following parameters: F0, shimmer and jitter 
-(especially useful for elderly people)
-for more accurate recognition</li>
-    <li>A user provides a few supervised inputs (speech and its text target) so that the ASR model can be fine-tuned for
-each user (definitely possible with Whisper)</li>
-<li>Provide a user interface with fewer instructions (for users, who got used to the app)</li>
-    <li>Automatic generation of reports for doctor (in PDF or whatever)</li>
-    <li>Unit tests for each method, not only for pattern recognizers!!!!
-e.g. if there is no systolic, diastolic or heart rate (a user simply didn't pronounce any of them), then None will be returned
-#  and NumPy's mean cannot be calculated with None (this Error must be fixed!). More unit-tests!!</li>
-
-
+    <li>Enable the user to provide their age, allowing the app to automatically adjust parameters such as F0, shimmer, and jitter for more accurate recognition, especially useful for elderly people</li>
+    <li>Allow the user to provide a few supervised inputs (speech and its text target) so that the ASR model can be fine-tuned for each user (potentially achievable with Whisper)</li>
+    <li>Provide a user interface with fewer instructions for users who have become accustomed to the app</li>
+    <li>Implement automatic generation of reports for doctors (in PDF or another format)</li>
+    <li>Introduce unit tests for each method, not only for pattern recognizers. For example, if there is no systolic, diastolic, or heart rate (a user simply didn't pronounce any of them), then `None` will be returned, and NumPy's mean cannot be calculated with `None`. This error must be fixed. More unit tests are needed!</li>
 </ul>
 </details>
 
@@ -176,13 +176,10 @@ e.g. if there is no systolic, diastolic or heart rate (a user simply didn't pron
 <details>
   <summary><b><i>Audio interface (audio_user_interface.py):</i></b></summary>
 <ul>
-  <li>Provide an interface, where app's generated utterances have fewer instructions 
-(for the case, if the user has already gotten used to the app)</li>
-  <li>"Have you done your measurement? Are you ready to input it? Tell me yes or no". After that, the users' response must not 
-follow immediately (as it is now). The user can still be measuring his blood pressure. Additionally, 
-an error occurring in the case of negative ('no') response must be fixed</li>
-<li>Menu choice must be done via voice input</li>
-  <li>Add utterances for different number of measurements:
+  <li>Provide an interface where app-generated utterances have fewer instructions for users who have already become accustomed to the app</li>
+  <li>Modify the prompt "Have you done your measurement? Are you ready to input it? Tell me yes or no". After that, the user's response must not follow immediately (as it does now). The user may still be measuring their blood pressure. Additionally, fix any errors occurring in the case of a negative ('no') response</li>
+<li>Implement menu choice via voice input</li>
+  <li>Add utterances for different numbers of measurements:
     <ul>
     <li>"Have you done your first/second/third measurement?"</li>
     <li>"Here are the average rates from one/two/three measurements..."</li>
