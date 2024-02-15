@@ -151,6 +151,7 @@ Please feel free to contribute to the source code and these TODO-lists.
   <li>Implement the second menu choice: adding measurements via keyboard</li>
   <li>Implement the third menu choice: adding measurements via .wav files</li>
   <li>Implement the fourth menu choice: print n last records filtered by date or effect (activity, substance etc.)</li>
+  <li>Caution of too low or too high pressure/heart rates immediately upon average rates</li>
 </ul>
 </details>
 
